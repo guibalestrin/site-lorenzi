@@ -12,7 +12,7 @@
       '<h1 class="h1">Looks por ocasião</h1><p class="lede">Cada look leva às peças dele. Compre o look inteiro ou só a peça que quiser.</p>' +
       '<div class="looks-idx">' + C.looks.map(x => {
         const total = x.itens.reduce((s, id) => s + C.produto(id).preco, 0);
-        return '<article class="look-card"><a href="look.html?id=' + x.id + '" class="look-foto"><img src="' + C.foto(x.foto) + '" alt="" loading="lazy" width="900" height="1200"></a><div><p class="kicker"><span class="dia" aria-hidden="true"></span>' + esc(x.nome) + '</p><h2 class="h2"><a href="look.html?id=' + x.id + '">' + esc(x.titulo) + '</a></h2><p>' + esc(x.texto) + '</p><p class="preco">' + x.itens.length + ' peças · ' + brl(total) + ' <span class="ex">exemplo</span></p><a class="btn" href="look.html?id=' + x.id + '">Comprar o look</a></div></article>';
+        return '<article class="look-card"><a href="look.html?id=' + x.id + '" class="look-foto"><img src="' + C.foto(x.foto) + '" alt="" loading="lazy" width="900" height="1200"></a><div><p class="kicker"><span class="dia" aria-hidden="true"></span>' + esc(x.nome) + '</p><h2 class="h2"><a href="look.html?id=' + x.id + '">' + esc(x.titulo) + '</a></h2><p>' + esc(x.texto) + '</p><p class="preco">' + x.itens.length + ' peças · ' + brl(total) + '</p><a class="btn" href="look.html?id=' + x.id + '">Comprar o look</a></div></article>';
       }).join('') + '</div>';
     track('view_item_list', { lista: 'looks', itens: C.looks.length });
     return;
@@ -30,7 +30,7 @@
         '<form id="form-look" novalidate><ul class="look-itens">' + itens.map(p =>
           '<li class="look-item" data-id="' + p.id + '">' +
             '<a href="produto.html?id=' + p.id + '" class="li-foto"><img src="' + C.foto(p.fotos[0]) + '" alt="" loading="lazy"></a>' +
-            '<div class="li-txt"><h2><a href="produto.html?id=' + p.id + '">' + esc(p.nome) + '</a></h2><p class="preco">' + brl(p.preco) + ' <span class="ex">exemplo</span></p>' +
+            '<div class="li-txt"><h2><a href="produto.html?id=' + p.id + '">' + esc(p.nome) + '</a></h2><p class="preco">' + brl(p.preco) + '</p>' +
               '<label class="sr-only" for="t-' + p.id + '">Tamanho de ' + esc(p.nome) + '</label>' +
               '<select id="t-' + p.id + '" name="' + p.id + '"><option value="">Tamanho</option>' + p.tamanhos.map((t, i) => '<option value="' + t + '"' + (p.estoque[i] ? '' : ' disabled') + '>' + t + (p.estoque[i] ? '' : ' (indisponível)') + '</option>').join('') + '</select>' +
               '<a class="ver-peca" href="produto.html?id=' + p.id + '">Ver a peça e o guia de tamanhos</a>' +
@@ -51,7 +51,7 @@
   const erro = document.getElementById('look-erro');
   function soma() {
     const sel = [...form.querySelectorAll('input[name=incluir]:checked')].map(i => C.produto(i.value));
-    total.innerHTML = sel.length ? sel.length + (sel.length === 1 ? ' peça' : ' peças') + ' · <b>' + brl(sel.reduce((s, p) => s + p.preco, 0)) + '</b> <span class="ex">exemplo</span>' : 'Nenhuma peça marcada.';
+    total.innerHTML = sel.length ? sel.length + (sel.length === 1 ? ' peça' : ' peças') + ' · <b>' + brl(sel.reduce((s, p) => s + p.preco, 0)) + '</b>' : 'Nenhuma peça marcada.';
   }
   form.addEventListener('change', e => { erro.hidden = true; if (e.target.tagName === 'SELECT') e.target.removeAttribute('aria-invalid'); soma(); });
   soma();

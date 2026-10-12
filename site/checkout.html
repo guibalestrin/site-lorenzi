@@ -21,11 +21,13 @@
   <ol class="migalha"><li><a href="sacola.html">Sacola</a></li><li aria-current="page">Finalizar compra</li></ol>
   <h1 class="h1">Finalizar compra</h1>
   <p class="lede">Sem cadastro e sem senha. Três passos nesta mesma página.</p>
+  <p class="seguro-topo"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1.5"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9" stroke-linecap="round"/></svg>Compra em ambiente seguro, com conexão criptografada (HTTPS).</p>
   <div class="ck-grid">
   <form id="form-checkout" novalidate>
     <div class="msg erro" id="erros" role="alert" hidden></div>
     <section class="ck-passo" aria-labelledby="p1"><h2 id="p1" class="ck-t"><span class="n">1</span>Contato</h2>
       <div class="campo"><label for="f-email">E-mail</label><span class="dica" id="f-email-d">Para a confirmação e o rastreio do pedido.</span><input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="f-email-d e-email"><p class="erro-campo" id="e-email" hidden></p></div>
+      <label class="opt-in"><input type="checkbox" name="novidades"> Quero receber novidades e coleções da Casa Lorenzi por e-mail (opcional).</label>
       <div class="linha"><div class="campo"><label for="f-nome">Nome completo</label><input id="f-nome" name="nome" type="text" autocomplete="name" required aria-describedby="e-nome"><p class="erro-campo" id="e-nome" hidden></p></div><div class="campo"><label for="f-cpf">CPF</label><span class="dica" id="f-cpf-d">Exigido para emitir a nota fiscal.</span><input id="f-cpf" name="cpf" type="text" inputmode="numeric" autocomplete="off" data-mascara="cpf" required aria-describedby="f-cpf-d e-cpf"><p class="erro-campo" id="e-cpf" hidden></p></div></div>
       <div class="campo"><label for="f-cel">Celular (opcional)</label><span class="dica" id="f-cel-d">Só para avisos de entrega.</span><input id="f-cel" name="cel" type="tel" inputmode="tel" autocomplete="tel-national" data-mascara="cel" aria-describedby="f-cel-d e-cel"><p class="erro-campo" id="e-cel" hidden></p></div>
     </section>
@@ -37,6 +39,7 @@
       <fieldset class="ck-fretes"><legend class="rot">Forma de entrega</legend><div id="fretes"></div></fieldset>
     </section>
     <section class="ck-passo" aria-labelledby="p3"><h2 id="p3" class="ck-t"><span class="n">3</span>Pagamento</h2>
+      <div class="pg-topo"><p class="seguro-linha"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1.5"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9" stroke-linecap="round"/></svg>Pagamento seguro</p><ul class="pagamentos" aria-label="Formas de pagamento aceitas"><li>Visa</li><li>Mastercard</li><li>Elo</li><li>Amex</li><li>Pix</li></ul></div>
       <fieldset class="pgs"><legend class="sr-only">Forma de pagamento</legend>
         <label class="opc-pg"><input type="radio" name="metodo" value="cartao" checked><span><b>Cartão de crédito</b><small>Visa, Mastercard, Elo e outras bandeiras</small></span></label>
         <div class="pg-bloco" id="pg-cartao"><p class="teste"><span class="ex">teste</span> Aprovado: 4111 1111 1111 1111 · Recusado: 4000 0000 0000 0002 · Sem resposta do banco: 4000 0000 0000 0119. Qualquer validade futura e CVV de 3 números.</p></div>
@@ -48,20 +51,28 @@
           <div class="campo"><label for="f-c-numero">Número do cartão</label><input id="f-c-numero" name="c-numero" type="text" inputmode="numeric" autocomplete="cc-number" data-mascara="cartao" aria-describedby="e-c-numero"><p class="erro-campo" id="e-c-numero" hidden></p></div>
           <div class="campo"><label for="f-c-nome">Nome impresso no cartão</label><input id="f-c-nome" name="c-nome" type="text" autocomplete="cc-name" aria-describedby="e-c-nome"><p class="erro-campo" id="e-c-nome" hidden></p></div>
           <div class="linha"><div class="campo"><label for="f-c-validade">Validade (MM/AA)</label><input id="f-c-validade" name="c-validade" type="text" inputmode="numeric" autocomplete="cc-exp" data-mascara="validade" placeholder="MM/AA" aria-describedby="e-c-validade"><p class="erro-campo" id="e-c-validade" hidden></p></div><div class="campo"><label for="f-c-cvv">Código de segurança</label><input id="f-c-cvv" name="c-cvv" type="text" inputmode="numeric" autocomplete="cc-csc" data-mascara="cvv" aria-describedby="e-c-cvv"><p class="erro-campo" id="e-c-cvv" hidden></p></div></div>
-          <p class="nota">Pagamento à vista nesta demonstração. Parcelamento depende das condições comerciais da Casa Lorenzi.</p>
+          <div class="campo"><label for="f-parcelas">Parcelas</label><select id="f-parcelas" name="parcelas"></select></div>
+          <p class="nota">Os dados do cartão vão direto para o processador de pagamento e não ficam guardados no site.</p>
         </fieldset>
       </fieldset>
       <div class="msg erro falha" id="falha" tabindex="-1" role="alert" hidden></div>
       <div class="msg info pix-codigo" id="pix-codigo" hidden></div>
       <button class="btn grande largo" type="submit" id="pagar">Pagar</button>
-      <p class="nota seguro">Loja de demonstração: nenhum valor é cobrado e nenhum dado sai do seu navegador.</p>
+      <p class="nota seguro"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1.5"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9" stroke-linecap="round"/></svg>Ambiente seguro. Loja de demonstração: nenhum valor é cobrado e nenhum dado sai do seu navegador.</p>
+      <p class="nota privacidade">Usamos seus dados só para entregar o pedido e emitir a nota fiscal. <a href="ajuda.html#privacidade">Privacidade e dados</a></p>
     </section>
   </form>
   <aside class="resumo ck-resumo" aria-labelledby="ck-res">
     <div class="ck-res-topo"><h2 id="ck-res" class="h2">Seu pedido</h2><a href="sacola.html">Editar sacola</a></div>
     <ul class="ck-itens" id="resumo-itens"></ul>
     <dl><div><dt>Subtotal</dt><dd id="r-sub"></dd></div><div><dt>Frete</dt><dd id="r-frete"></dd></div><div class="total"><dt>Total</dt><dd id="r-total"></dd></div></dl>
-    <p class="nota">Valores de exemplo desta demonstração.</p>
+    <p class="parcelas" id="r-parcelas"></p>
+    <p class="prazo-est" id="r-prazo"></p>
+    <ul class="confianca compacta" aria-label="Garantias da compra">
+      <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 7h11l-3-3M16 13H5l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Troca grátis em até 30 dias</b>, na loja ou pelos Correios. <a href="ajuda.html#trocas">Regras</a></span></li>
+      <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1.5"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9" stroke-linecap="round"/></svg><span><b>Compra segura</b>, sem cadastro e sem senha.</span></li>
+      <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 2.5 17.5 10 10 17.5 2.5 10Z"/><path d="M10 6.5 13.5 10 10 13.5 6.5 10Z"/></svg><span><b>Casa Lorenzi, desde 1989</b>. 142 lojas em 21 estados.</span></li>
+    </ul>
     <div class="assist-box"><button class="link-ajuda" type="button" data-ajuda="sacola" data-sacola="1">Prefere comprar com ajuda?</button><p>Opcional. Você pode concluir aqui sem falar com ninguém.</p></div>
   </aside>
   </div>
@@ -69,6 +80,7 @@
 </main>
 <footer id="rodape"></footer>
 <script src="assets/catalogo.js"></script>
+<script src="assets/avaliacoes.js"></script>
 <script src="assets/loja.js"></script>
 <script src="assets/pagamento.js"></script>
 <script src="assets/p-checkout.js"></script>

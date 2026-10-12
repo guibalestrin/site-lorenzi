@@ -220,3 +220,51 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition:none!important;animation:none!important}
 }
+
+/* ---------- conversão: barra de benefícios (mesma altura da faixa) ---------- */
+.demo-selo{flex:none;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--on-ink);border:1px solid rgba(239,232,220,.3);border-radius:4px;padding:2px 6px;text-decoration:none}
+.beneficios{display:flex;gap:30px;list-style:none;margin:0;padding:0}
+.beneficios a{display:inline-flex;align-items:center;gap:7px;color:var(--on-ink-2);text-decoration:none}
+.beneficios a:hover{color:var(--on-ink)}
+.beneficios svg{width:14px;height:14px;flex:none;color:#c99a6f}
+@media (max-width:1100px){
+  .beneficios{position:relative;flex:1;min-width:0;height:var(--demo-h)}
+  .beneficios li{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .6s var(--ease-out),visibility 0s linear .6s}
+  .beneficios li.on{opacity:1;visibility:visible;transition-delay:0s}
+}
+@media (max-width:640px){.beneficios li{justify-content:flex-start}.beneficios a{overflow:hidden;text-overflow:ellipsis}}
+
+/* ---------- avaliação, preço e favorito no card ---------- */
+.estrelas{display:inline-flex;gap:1px;color:var(--detail);flex:none}
+.nota-card{display:flex;align-items:center;gap:6px;margin:0;font-size:13px;color:var(--text-secondary)}
+.nota-card small{font-size:12.5px}
+.preco s{font-weight:400;font-size:14px;color:var(--text-secondary)}
+.desconto{font-size:12.5px;font-weight:600;color:var(--detail)}
+.parcelas{margin:0;font-size:13.5px;color:var(--text-secondary)}
+.fav{position:absolute;top:8px;right:8px;z-index:2;width:44px;height:44px;border:0;border-radius:50%;background:rgba(246,241,232,.9);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:transform .25s var(--ease-out)}
+.fav svg,.fav-pdp svg{width:21px;height:21px}
+.fav:hover{transform:scale(1.06)}
+.fav[aria-pressed="true"],.fav-pdp[aria-pressed="true"]{color:var(--detail)}
+.fav[aria-pressed="true"] svg path,.fav-pdp[aria-pressed="true"] svg path{fill:currentColor}
+
+/* ---------- aviso discreto ---------- */
+.toast{position:fixed;left:50%;bottom:20px;z-index:95;max-width:calc(100% - 32px);transform:translate(-50%,16px);opacity:0;pointer-events:none;background:var(--ink);color:var(--on-ink);padding:12px 18px;border-radius:12px;font-size:14.5px;box-shadow:0 20px 40px -16px rgba(22,18,15,.5);transition:opacity .3s var(--ease-out),transform .3s var(--ease-out)}
+.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast a{color:var(--on-ink);text-underline-offset:3px;margin-left:6px}
+@media (max-width:900px){.toast{bottom:88px}}
+
+/* ---------- newsletter no rodapé ---------- */
+.news{display:grid;grid-template-columns:1fr 1.1fr;gap:20px 48px;align-items:start;padding-bottom:40px;margin-bottom:40px;border-bottom:1px solid var(--line-ink)}
+.rodape .news h2{font-family:var(--display);font-weight:500;font-size:28px;letter-spacing:0;text-transform:none;color:var(--on-ink);margin:0 0 6px}
+.news p{margin:0}
+.news-campos{display:flex;gap:8px}
+.news-campos input{flex:1;min-width:0;height:48px;border:1px solid rgba(239,232,220,.3);border-radius:999px;background:rgba(239,232,220,.06);color:var(--on-ink);padding:0 18px;font-size:16px}
+.news-campos input::placeholder{color:var(--on-ink-2)}
+.news-campos input:focus{outline:none;border-color:var(--on-ink)}
+.news-ok{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:13.5px;cursor:pointer}
+.news-ok input{width:18px;height:18px;margin:1px 0 0;accent-color:#c99a6f;flex:none}
+.news-msg{margin:8px 0 0;font-size:14px;color:#e9c9a6}
+.news-msg:empty{display:none}
+.news-msg.ok{color:var(--on-ink)}
+@media (max-width:860px){.news{grid-template-columns:1fr}}
+@media (max-width:420px){.news-campos{flex-direction:column}.news-campos .btn{width:100%}}

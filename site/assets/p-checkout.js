@@ -1,7 +1,7 @@
 /* Checkout curto, numa página, sem cadastro. Pagamento pelo adaptador em pagamento.js */
 (function () {
   'use strict';
-  const { C, esc, brl, sacola, frete, prazoTxt, le, guarda, track } = window.CL;
+  const { C, esc, brl, sacola, frete, valorFrete, chegaAte, parcelas, le, guarda, track } = window.CL;
   const pagamento = window.CLPagamento.criarPagamento({ tempoLimiteMs: 8000 });
   const raiz = document.getElementById('checkout');
   const itens = sacola.itens();
@@ -22,10 +22,18 @@
   function total() { return subtotal + (freteEscolhido ? freteEscolhido.valor : 0); }
   function atualizaTotais() {
     document.getElementById('r-sub').textContent = brl(subtotal);
-    document.getElementById('r-frete').textContent = freteEscolhido ? brl(freteEscolhido.valor) : 'a calcular';
+    document.getElementById('r-frete').textContent = freteEscolhido ? valorFrete(freteEscolhido) : 'a calcular';
     document.getElementById('r-total').textContent = brl(total());
+    document.getElementById('r-prazo').innerHTML = freteEscolhido ? (freteEscolhido.id === 'retirada' ? 'Pronto para retirar' : 'Chega') + ' até <b>' + chegaAte(freteEscolhido.prazo) + '</b>.' : '';
+    // parcelas: mesma regra mostrada na peça e na sacola
+    const par = parcelas(total());
+    document.getElementById('r-parcelas').textContent = par ? 'ou até ' + par.n + 'x de ' + brl(par.valor) + ' sem juros' : '';
+    const selP = document.getElementById('f-parcelas');
+    const atual = Number(selP.value) || 1;
+    const max = par ? par.n : 1;
+    selP.innerHTML = Array.from({ length: max }, (_, i) => '<option value="' + (i + 1) + '"' + (i + 1 === Math.min(atual, max) ? ' selected' : '') + '>' + (i + 1) + 'x de ' + brl(total() / (i + 1)) + (i ? ' sem juros' : ' (à vista)') + '</option>').join('');
     const m = (form.metodo && form.metodo.value) || 'cartao';
-    document.getElementById('pagar').textContent = m === 'pix' ? 'Gerar código Pix de ' + brl(total()) : 'Pagar ' + brl(total());
+    document.getElementById('pagar').textContent = m === 'pix' ? 'Gerar código Pix de ' + brl(total()) : 'Pagar ' + brl(total()) + (m !== 'pix' && Number(selP.value) > 1 ? ' em ' + selP.value + 'x' : '');
   }
 
   /* ---------- máscaras e validações ---------- */
@@ -82,7 +90,7 @@
     if (!ops) { freteBox.innerHTML = '<p class="nota">Informe o CEP para ver as opções de entrega.</p>'; freteEscolhido = null; atualizaTotais(); return; }
     const pref = le('cl_frete', 'economico');
     freteEscolhido = ops.find(o => o.id === pref) || ops[0];
-    freteBox.innerHTML = ops.map(o => '<label class="opc-frete"><input type="radio" name="frete" value="' + o.id + '"' + (o.id === freteEscolhido.id ? ' checked' : '') + '><span><b>' + o.nome + '</b> · ' + prazoTxt(o.prazo) + '</span><b>' + brl(o.valor) + '</b></label>').join('') + '<p class="nota">Simulação de frete com valores de exemplo. O prazo conta a partir da confirmação do pagamento.</p>';
+    freteBox.innerHTML = ops.map(o => '<label class="opc-frete"><input type="radio" name="frete" value="' + o.id + '"' + (o.id === freteEscolhido.id ? ' checked' : '') + '><span><b>' + esc(o.nome) + '</b><small>' + (o.id === 'retirada' ? 'pronto' : 'chega') + ' até ' + chegaAte(o.prazo) + '</small></span><b>' + valorFrete(o) + '</b></label>').join('') + '<p class="nota">O prazo conta a partir da confirmação do pagamento.</p>';
     atualizaTotais();
   }
   freteBox.addEventListener('change', e => {
@@ -134,7 +142,7 @@
     atualizaTotais();
     if (foco) form.querySelector('input[name=metodo][value="' + m + '"]').focus();
   }
-  form.addEventListener('change', e => { if (e.target.name === 'metodo') { document.getElementById('falha').hidden = true; trocaMetodo(e.target.value); } });
+  form.addEventListener('change', e => { if (e.target.name === 'parcelas') atualizaTotais(); if (e.target.name === 'metodo') { document.getElementById('falha').hidden = true; trocaMetodo(e.target.value); } });
   trocaMetodo('cartao');
 
   /* ---------- falha e alternativa ---------- */
@@ -170,7 +178,8 @@
     const btn = document.getElementById('pagar');
     const rotulo = btn.textContent;
     btn.disabled = true; btn.textContent = 'Processando...';
-    const pedido = { id: 'DEMO-' + Date.now().toString(36).toUpperCase(), total: total(), itens: itens.map(i => ({ id: i.id, tamanho: i.tamanho, qtd: i.qtd })) };
+    if (form.novidades.checked) { guarda('cl_newsletter', { email: $('[name=email]').value, t: Date.now(), origem: 'checkout' }); track('newsletter_signup', { origem: 'checkout' }); }
+    const pedido = { id: 'DEMO-' + Date.now().toString(36).toUpperCase(), total: total(), parcelas: m === 'pix' ? 1 : Number(form.parcelas.value) || 1, itens: itens.map(i => ({ id: i.id, tamanho: i.tamanho, qtd: i.qtd })) };
     track('add_payment_info', { metodo: m, valor: pedido.total });
     const r = await pagamento.autorizar(pedido, { metodo: m, cartao: { numero: $('[name=c-numero]').value, nome: $('[name=c-nome]').value, validade: $('[name=c-validade]').value, cvv: $('[name=c-cvv]').value } });
     btn.disabled = false; btn.textContent = rotulo; enviando = false;

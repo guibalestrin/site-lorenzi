@@ -17,6 +17,15 @@
     fechar: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3l10 10M13 3 3 13" stroke-linecap="round"/></svg>',
     desce: '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     conversa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5Z" stroke-linejoin="round"/><path d="M8 9.5h8M8 12.5h5" stroke-linecap="round"/></svg>',
+    troca: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 7h11l-3-3M16 13H5l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    cadeado: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1.5"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9" stroke-linecap="round"/></svg>',
+    losango: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 2.5 17.5 10 10 17.5 2.5 10Z"/><path d="M10 6.5 13.5 10 10 13.5 6.5 10Z"/></svg>',
+    loja: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h14M4 8v9h12V8M3 8l1.5-4.5h11L17 8M8 17v-5h4v5" stroke-linejoin="round"/></svg>',
+    caminhao: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 5h10v9H2zM12 8h3.5L18 11v3h-6" stroke-linejoin="round"/><circle cx="5.5" cy="15" r="1.5"/><circle cx="14.5" cy="15" r="1.5"/></svg>',
+    check: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    coracao: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20Z" stroke-linejoin="round"/></svg>',
+    sino: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 14V9a5 5 0 0 1 10 0v5l1.5 1.5h-13L5 14ZM8.5 17.5h3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    whatsapp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.6 18.6l-4.1.9Z" stroke-linejoin="round"/><path d="M9 8.5c0 3 2.5 6 6 6.5l1-1.6-2-1-1 .8c-1-.4-2-1.4-2.4-2.4l.8-1-1-2-1.4.7Z" stroke-linejoin="round"/></svg>',
     info: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 9v5M10 6.2v.1" stroke-linecap="round"/></svg>'
   };
 
@@ -70,24 +79,98 @@
 
   /* ---------- frete (simulação) ---------- */
   // Em produção vem da transportadora ou da plataforma. Aqui, uma tabela por região do CEP.
+  const COM = C.comercial;
   function frete(cep, subtotal) {
     const d = String(cep || '').replace(/\D/g, '');
     if (d.length !== 8) return null;
     const regiao = Number(d[0]);
     const base = [14.9, 16.9, 18.9, 19.9, 22.9, 24.9, 27.9, 26.9, 21.9, 23.9][regiao];
     const prazo = [3, 4, 5, 5, 6, 7, 8, 8, 5, 6][regiao];
+    const gratis = (subtotal || 0) >= COM.freteGratisAcima;
+    const loja = lojasPerto(cep)[0];
     return [
-      { id: 'economico', nome: 'Econômico', valor: base, prazo: prazo + 3 },
-      { id: 'expresso', nome: 'Expresso', valor: Math.round((base * 1.8) * 10) / 10, prazo: Math.max(2, prazo - 1) }
+      { id: 'economico', nome: 'Econômico', valor: gratis ? 0 : base, prazo: prazo + 3, gratis },
+      { id: 'expresso', nome: 'Expresso', valor: Math.round((base * 1.8) * 10) / 10, prazo: Math.max(2, prazo - 1) },
+      { id: 'retirada', nome: 'Retirar na ' + loja.nome + ' (' + loja.cidade + ')', valor: 0, prazo: COM.retiradaDias, loja: loja.id }
     ];
   }
   const prazoTxt = d => 'até ' + d + ' dias úteis';
+  const valorFrete = o => o.valor ? brl(o.valor) : 'Grátis';
+  // data estimada contando só dias úteis a partir de hoje
+  function chegaAte(dias) {
+    const d = new Date(); let n = dias;
+    while (n > 0) { d.setDate(d.getDate() + 1); if (d.getDay() !== 0 && d.getDay() !== 6) n--; }
+    return d.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' }).replace(/\.,/, ',').replace(/\.$/, '');
+  }
+  function parcelas(v) {
+    const n = Math.min(COM.parcelasMax, Math.floor(v / COM.parcelaMinima));
+    return n >= 2 ? { n, valor: v / n } : null;
+  }
+  function precoHTML(p, grande) {
+    const par = parcelas(p.preco);
+    const off = p.precoDe ? Math.round((1 - p.preco / p.precoDe) * 100) : 0;
+    if (grande) {
+      return '<div class="preco-bloco">' +
+        (p.precoDe ? '<p class="preco-de"><span class="sr-only">Preço anterior: </span><s>' + brl(p.precoDe) + '</s></p>' : '') +
+        '<p class="preco grande">' + (p.precoDe ? '<span class="sr-only">Preço atual: </span>' : '') + brl(p.preco) + (p.precoDe ? ' <span class="desconto">economize ' + brl(p.precoDe - p.preco) + ' (' + off + '%)</span>' : '') + '</p>' +
+        (par ? '<p class="parcelas">ou até ' + par.n + 'x de ' + brl(par.valor) + ' sem juros</p>' : '') + '</div>';
+    }
+    return '<p class="preco">' + (p.precoDe ? '<s><span class="sr-only">De </span>' + brl(p.precoDe) + '</s> <span class="sr-only">por </span>' : '') + brl(p.preco) + (p.precoDe ? ' <span class="desconto">-' + off + '%</span>' : '') + '</p>' +
+      (par ? '<p class="parcelas">ou ' + par.n + 'x de ' + brl(par.valor) + '</p>' : '');
+  }
+
+  /* ---------- lojas: as mais perto do CEP e a disponibilidade (simulada) ---------- */
+  function lojasPerto(cep) {
+    const d = String(cep || '').replace(/\D/g, '');
+    const r = d ? Number(d[0]) : 0;
+    const dist = l => Math.min(...l.regiao.map(x => Math.abs(x - r)));
+    return C.lojas.slice().sort((a, b) => dist(a) - dist(b));
+  }
+  function dispLoja(lojaId, prodId, tamanho) {
+    let h = 7; for (const c of lojaId + prodId + tamanho) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+    const x = h % 10;
+    return x < 2 ? 0 : x < 4 ? 1 : 3;
+  }
+
+  /* ---------- favoritos e vistos recentemente ---------- */
+  const favoritos = {
+    lista() { return le('cl_favoritos', []).filter(id => C.produto(id)); },
+    tem(id) { return this.lista().includes(id); },
+    alterna(id) {
+      const l = this.lista(); const i = l.indexOf(id);
+      if (i > -1) l.splice(i, 1); else l.unshift(id);
+      guarda('cl_favoritos', l);
+      const salvo = i === -1;
+      doc.querySelectorAll('[data-fav="' + id + '"]').forEach(b => { b.setAttribute('aria-pressed', String(salvo)); b.setAttribute('aria-label', (salvo ? 'Remover dos favoritos: ' : 'Salvar nos favoritos: ') + C.produto(id).nome); });
+      track(salvo ? 'add_to_wishlist' : 'remove_from_wishlist', { item_id: id });
+      toast(salvo ? '<strong>Salvo nos favoritos.</strong> <a href="favoritos.html">Ver favoritos</a>' : 'Removido dos favoritos.');
+      doc.dispatchEvent(new CustomEvent('cl:favoritos'));
+      return salvo;
+    }
+  };
+  const vistos = {
+    lista() { return le('cl_vistos', []).filter(id => C.produto(id)); },
+    add(id) { const l = this.lista().filter(x => x !== id); l.unshift(id); guarda('cl_vistos', l.slice(0, 8)); }
+  };
+
+  /* ---------- aviso discreto (toast) ---------- */
+  let toastEl = null, toastT = null;
+  function toast(html) {
+    if (!toastEl) { toastEl = doc.createElement('div'); toastEl.className = 'toast'; toastEl.setAttribute('role', 'status'); toastEl.setAttribute('aria-live', 'polite'); doc.body.append(toastEl); }
+    toastEl.innerHTML = html;
+    toastEl.classList.add('on');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => toastEl.classList.remove('on'), 4500);
+  }
 
   /* ---------- card de produto ---------- */
   function card(p, opcoes) {
     const o = opcoes || {};
     const tams = p.tamanhos.map((t, n) => '<li' + (p.estoque[n] ? '' : ' class="off" title="Indisponível"') + '>' + t + '</li>').join('');
+    const av = window.CL_AVALIACOES && CL_AVALIACOES.de(p.id);
+    const fav = favoritos.tem(p.id);
     return '<article class="card">' +
+      '<button class="fav" type="button" data-fav="' + p.id + '" aria-pressed="' + fav + '" aria-label="' + (fav ? 'Remover dos favoritos: ' : 'Salvar nos favoritos: ') + esc(p.nome) + '">' + ICONE.coracao + '</button>' +
       '<a class="card-foto" href="produto.html?id=' + p.id + '" tabindex="-1" aria-hidden="true">' +
         '<img src="' + C.foto(p.fotos[0]) + '" alt="" loading="lazy" width="600" height="800">' +
         '<img class="alt" src="' + C.foto(p.fotos[1]) + '" alt="" loading="lazy" width="600" height="800">' +
@@ -95,7 +178,8 @@
       '</a>' +
       '<div class="card-txt">' +
         '<h3><a href="produto.html?id=' + p.id + '">' + esc(p.nome) + '</a></h3>' +
-        '<p class="preco">' + brl(p.preco) + ' <span class="ex" title="Preço de demonstração">exemplo</span></p>' +
+        (av ? '<p class="nota-card">' + CL_AVALIACOES.estrelas(av.media, 13) + '<span aria-hidden="true">' + CL_AVALIACOES.notaTxt(av.media) + '</span> <small>(' + av.total + '<span class="sr-only"> avaliações</span>)</small></p>' : '') +
+        precoHTML(p) +
         '<p class="meta"><span class="cor-ponto" style="background:' + p.cor.hex + '"></span>' + esc(p.cor.nome) + ' · ' + esc(p.tecido) + '</p>' +
         '<ul class="tams" aria-label="Tamanhos">' + tams + '</ul>' +
       '</div></article>';
@@ -116,7 +200,13 @@
   const subCats = C.categorias.map(c => '<a href="loja.html?cat=' + c.id + '">' + c.nome + '</a>').join('') + '<a class="tudo" href="loja.html">Todas as peças</a>';
   const cabHTML =
     '<a class="skip" href="#principal">Pular para o conteúdo</a>' +
-    '<div class="demo-bar" role="note"><b>Loja de demonstração</b><span class="longo">· produtos, preços, estoque e frete são exemplos.</span> <a href="ajuda.html#demo">Saiba mais</a></div>' +
+    '<div class="demo-bar" role="region" aria-label="Benefícios da loja"><a class="demo-selo" href="ajuda.html#demo" title="Loja de demonstração: dados simulados">Demonstração</a>' +
+      '<ul class="beneficios" id="beneficios">' +
+        '<li class="on"><a href="ajuda.html#trocas">' + ICONE.troca + 'Troca grátis em até ' + COM.trocaDias + ' dias<span class="longo">, em qualquer loja</span></a></li>' +
+        '<li><a href="ajuda.html#pagamento">' + ICONE.cadeado + 'Pagamento seguro<span class="longo">, até ' + COM.parcelasMax + 'x sem juros</span></a></li>' +
+        '<li><a href="ajuda.html#consultora">' + ICONE.conversa + 'Consultora para ajudar<span class="longo"> na escolha</span></a></li>' +
+        '<li><a href="ajuda.html#lojas">' + ICONE.losango + 'Casa Lorenzi, desde 1989</a></li>' +
+      '</ul></div>' +
     '<header class="cab" id="cab"><div class="cab-in">' +
       '<button class="cab-icone cab-menu" id="cab-menu" type="button" aria-expanded="false" aria-controls="gaveta"><span class="sr-only">Abrir o menu</span><i aria-hidden="true"></i><i aria-hidden="true"></i></button>' +
       '<a class="cab-logo" href="index.html" aria-label="Casa Lorenzi, página inicial"><svg class="lg" aria-hidden="true"><use href="#cl-logo"/></svg></a>' +
@@ -138,7 +228,7 @@
     '</div></div>' +
     '<div class="gaveta" id="gaveta" hidden>' +
       '<ul class="prim">' + navLinks.map(l => '<li><a href="' + l[0] + '">' + l[1] + '</a></li>').join('') + '<li><a href="look.html">Looks</a></li></ul>' +
-      '<h2>Peças</h2><ul class="sec">' + C.categorias.map(c => '<li><a href="loja.html?cat=' + c.id + '">' + c.nome + '</a></li>').join('') + '<li><a href="loja.html">Todas as peças</a></li></ul>' +
+      '<h2>Peças</h2><ul class="sec">' + C.categorias.map(c => '<li><a href="loja.html?cat=' + c.id + '">' + c.nome + '</a></li>').join('') + '<li><a href="loja.html">Todas as peças</a></li><li><a href="favoritos.html">Favoritos</a></li></ul>' +
       '<h2>Atendimento</h2><ul class="sec"><li><a href="ajuda.html#lojas">Lojas</a></li><li><a href="ajuda.html">Ajuda, trocas e tamanhos</a></li></ul>' +
       '<button class="btn sec" type="button" data-ajuda="escolher">Preciso de ajuda para escolher</button>' +
     '</div>';
@@ -229,12 +319,51 @@
   const rod = doc.getElementById('rodape');
   if (rod) {
     rod.className = 'rodape';
-    rod.innerHTML = '<div class="wrap"><div class="grid">' +
+    rod.innerHTML = '<div class="wrap">' +
+      '<form class="news" id="news" novalidate><div class="news-txt"><h2>Novidades da Casa Lorenzi</h2><p>Receba coleções selecionadas e lançamentos. No máximo um e-mail por semana.</p></div>' +
+        '<div class="news-form"><div class="news-campos"><label class="sr-only" for="news-email">Seu e-mail</label><input id="news-email" type="email" autocomplete="email" placeholder="Seu e-mail" required><button class="btn claro" type="submit">Quero receber</button></div>' +
+        '<label class="news-ok"><input type="checkbox" id="news-aceite" required> Aceito receber e-mails da Casa Lorenzi e posso cancelar quando quiser.</label><p class="news-msg" id="news-msg" role="status" aria-live="polite"></p></div></form>' +
+      '<div class="grid">' +
       '<div><div class="logo"><svg class="lg" role="img" aria-label="Casa Lorenzi, 1989"><use href="#cl-logo"/></svg></div><p>Moda casual e social desde 1989.<br>142 lojas em 21 estados.</p></div>' +
-      '<div><h2>Comprar</h2><ul><li><a href="loja.html?novidades=1">Novidades</a></li><li><a href="loja.html?g=feminino">Feminino</a></li><li><a href="loja.html?g=masculino">Masculino</a></li><li><a href="look.html">Looks</a></li></ul></div>' +
+      '<div><h2>Comprar</h2><ul><li><a href="loja.html?novidades=1">Novidades</a></li><li><a href="loja.html?g=feminino">Feminino</a></li><li><a href="loja.html?g=masculino">Masculino</a></li><li><a href="look.html">Looks</a></li><li><a href="favoritos.html">Favoritos</a></li></ul></div>' +
       '<div><h2>Ajuda</h2><ul><li><a href="ajuda.html#tamanhos">Guia de tamanhos</a></li><li><a href="ajuda.html#trocas">Trocas</a></li><li><a href="ajuda.html#pagamento">Pagamento</a></li><li><a href="ajuda.html#entrega">Entrega</a></li></ul></div>' +
       '<div><h2>Casa Lorenzi</h2><ul><li><a href="ajuda.html#lojas">Lojas</a></li><li><a href="ajuda.html#consultora">Falar com uma consultora</a></li><li><a href="metricas.html">Painel de medição (demo)</a></li></ul></div>' +
       '</div><p class="aviso">Projeto conceitual de um case de estudo. Loja de demonstração: produtos, preços, estoque, medidas, composição, frete e pagamentos são simulados. Imagens geradas por IA. Nenhum dado é enviado.</p></div>';
+  }
+
+  const news = doc.getElementById('news');
+  if (news) news.addEventListener('submit', e => {
+    e.preventDefault();
+    const em = doc.getElementById('news-email'), ac = doc.getElementById('news-aceite'), msg = doc.getElementById('news-msg');
+    const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim());
+    em.setAttribute('aria-invalid', String(!okEmail));
+    if (!okEmail) { msg.textContent = 'Digite um e-mail válido.'; em.focus(); return; }
+    if (!ac.checked) { msg.textContent = 'Marque o aceite para receber os e-mails.'; ac.focus(); return; }
+    guarda('cl_newsletter', { email: em.value.trim(), t: Date.now() });
+    track('newsletter_signup', { origem: pagina });
+    news.querySelector('.news-form').innerHTML = '<p class="news-msg ok" role="status">Pronto. Você vai receber as novidades em ' + esc(em.value.trim()) + '. (Demonstração: nenhum e-mail é enviado.)</p>';
+  });
+
+  // favoritos: qualquer botão com data-fav
+  doc.addEventListener('click', e => {
+    const b = e.target.closest('[data-fav]');
+    if (!b) return;
+    e.preventDefault(); e.stopPropagation();
+    favoritos.alterna(b.dataset.fav);
+  });
+
+  // barra de benefícios: em telas estreitas, um benefício por vez
+  const benef = doc.getElementById('beneficios');
+  if (benef) {
+    const itens = [...benef.children]; let k = 0, pausa = false;
+    benef.addEventListener('mouseenter', () => { pausa = true; });
+    benef.addEventListener('mouseleave', () => { pausa = false; });
+    benef.addEventListener('focusin', () => { pausa = true; });
+    benef.addEventListener('focusout', () => { pausa = false; });
+    setInterval(() => {
+      if (pausa || reduce.matches || doc.hidden || !matchMedia('(max-width: 1100px)').matches) return;
+      itens[k].classList.remove('on'); k = (k + 1) % itens.length; itens[k].classList.add('on');
+    }, 5000);
   }
 
   /* ---------- consultora: ajuda de contexto, nunca obrigatória ---------- */
@@ -243,6 +372,7 @@
     look: { titulo: 'Ajuda para montar o look?', intro: 'A consultora sugere o que combina com esta peça, para a ocasião que você tem em mente.', msg: 'Olá! Quero ajuda para montar um look com esta peça.' },
     sacola: { titulo: 'Prefere comprar com ajuda?', intro: 'A consultora recebe a sua sacola e confirma tamanhos, combinações e entrega com você.', msg: 'Olá! Quero ajuda para finalizar a compra desta sacola.' },
     escolher: { titulo: 'Preciso de ajuda para escolher', intro: 'Conte a ocasião e como você gosta de vestir. A consultora sugere peças com medidas, tecido e fotos no corpo.', msg: 'Olá! Quero ajuda para escolher uma roupa.' },
+    consultora: { titulo: 'Falar com uma consultora', intro: 'Como numa loja Casa Lorenzi: a consultora ajuda com tamanho, caimento, combinações, tecidos e a ocasião de uso. Ela recebe a peça que você está vendo.', msg: 'Olá! Quero ajuda para escolher esta peça.' },
     pagamento: { titulo: 'Ajuda com o pagamento', intro: 'Se algo deu errado no pagamento, a consultora ajuda a concluir. A sua sacola continua guardada.', msg: 'Olá! Tive um problema no pagamento.' }
   };
   let ultimoFoco = null;
@@ -325,6 +455,8 @@
       if (bad) { bad.focus(); return; }
       const canal = f.canal.value;
       track('assist_submit', { motivo, canal, origem: pagina });
+      // com o número configurado, o WhatsApp abre já com a mensagem e o contexto
+      if (canal === 'WhatsApp' && COM.whatsapp) { window.open('https://wa.me/' + COM.whatsapp + '?text=' + encodeURIComponent(f.msg.value), '_blank', 'noopener'); }
       lat.querySelector('#aj-ok').innerHTML = '<div class="msg ok"><strong>Recebido, ' + esc(f.nome.value.trim().split(/\s+/)[0]) + '.</strong>Esta é uma loja de demonstração e nada foi enviado. No site real, uma consultora responderia por ' + esc(canal) + ' com a mensagem acima. Você pode continuar comprando.</div>';
       lat.querySelector('.lateral-pe .btn').textContent = 'Continuar comprando';
       lat.querySelector('.lateral-pe .btn').setAttribute('type', 'button');
@@ -347,6 +479,14 @@
     ajuda(b.dataset.ajuda, ctx);
   });
 
+  // Esc fecha a gaveta aberta mesmo se o foco saiu dela
+  addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const abertas = [...doc.querySelectorAll('.lateral.on')];
+    const ult = abertas[abertas.length - 1];
+    if (ult && !ult.contains(doc.activeElement)) ult._fechar();
+  });
+
   /* ---------- gaveta lateral genérica (filtros, guia de tamanhos) ---------- */
   function lateral(titulo, corpoHTML, peHTML) {
     const f2 = doc.createElement('div'); f2.className = 'lateral-fundo'; f2.hidden = true;
@@ -363,5 +503,33 @@
     return { el: l2, abrir: () => abrirLateral(l2, f2), fechar: l2._fechar };
   }
 
-  window.CL = { C, esc, brl, params, track, sacola, frete, prazoTxt, card, ajuda, lateral, ICONE, buscar, le, guarda };
+  /* ---------- avise-me quando o tamanho voltar ---------- */
+  function aviseMe(p, tamanho) {
+    const off = p.tamanhos.filter((t, i) => !p.estoque[i]);
+    const corpo = doc.createElement('form');
+    corpo.noValidate = true;
+    corpo.innerHTML = '<p style="margin:0 0 16px;color:var(--text-secondary)">Avisamos por e-mail assim que o tamanho voltar ao estoque. Um aviso só, sem cadastro.</p>' +
+      '<div class="contexto"><img src="' + C.foto(p.fotos[0]) + '" alt=""><div><strong>' + esc(p.nome) + '</strong><small>' + esc(p.cor.nome) + ' · ref. ' + p.ref + '</small></div></div>' +
+      '<fieldset class="campo"><legend>Tamanho</legend><div class="chips">' + off.map(t => '<label class="chip"><input type="radio" name="t" value="' + t + '"' + (t === tamanho || off.length === 1 ? ' checked' : '') + '><span>' + t + '</span></label>').join('') + '</div></fieldset>' +
+      '<div class="campo"><label for="av-email">E-mail</label><input id="av-email" type="email" autocomplete="email" required></div>' +
+      '<p class="msg erro" id="av-erro" hidden></p><div id="av-ok" role="status" aria-live="polite"></div>' +
+      '<button class="btn largo" type="submit">Avise-me</button>';
+    const l = lateral('Avise-me quando voltar', corpo);
+    corpo.addEventListener('submit', e => {
+      e.preventDefault();
+      const t = corpo.querySelector('input[name=t]:checked'), em = corpo.querySelector('#av-email'), er = corpo.querySelector('#av-erro');
+      const okE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim());
+      er.hidden = !!(t && okE); er.textContent = !t ? 'Escolha o tamanho.' : 'Digite um e-mail válido.';
+      if (!t || !okE) { (!t ? corpo.querySelector('input[name=t]') : em).focus(); return; }
+      const lista = le('cl_avise', []); lista.push({ id: p.id, tamanho: t.value, t: Date.now() }); guarda('cl_avise', lista);
+      track('back_in_stock_request', { item_id: p.id, tamanho: t.value });
+      corpo.querySelector('#av-ok').innerHTML = '<div class="msg ok"><strong>Combinado.</strong>Avisaremos em ' + esc(em.value.trim()) + ' quando o ' + t.value + ' voltar. (Demonstração: nenhum e-mail é enviado.)</div>';
+      corpo.querySelector('button[type=submit]').hidden = true;
+      l.el.querySelector('.fechar').focus();
+    });
+    l.abrir();
+    track('back_in_stock_open', { item_id: p.id });
+  }
+
+  window.CL = { C, esc, brl, params, track, sacola, frete, prazoTxt, valorFrete, chegaAte, parcelas, precoHTML, lojasPerto, dispLoja, favoritos, vistos, toast, aviseMe, card, ajuda, lateral, ICONE, buscar, le, guarda };
 })();

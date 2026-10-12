@@ -90,6 +90,7 @@
     if (ordem === 'menor') l.sort((a, b) => a.preco - b.preco);
     else if (ordem === 'maior') l.sort((a, b) => b.preco - a.preco);
     else if (ordem === 'novidades') l.sort((a, b) => (b.novidade - a.novidade));
+    else if (ordem === 'avaliadas') l.sort((a, b) => window.CL_AVALIACOES.de(b.id).media - window.CL_AVALIACOES.de(a.id).media);
     return l;
   }
   function sincronizaUrl() {

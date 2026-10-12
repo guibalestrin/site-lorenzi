@@ -52,7 +52,7 @@
 
   const produtos = [
     {
-      id: 'blazer-linho-cru', ref: 'DEMO-F01', nome: 'Blazer de linho cru', genero: 'feminino', categoria: 'blazers',
+      id: 'blazer-linho-cru', modelo: { altura: '1,72 m', tamanho: 'P' }, ref: 'DEMO-F01', nome: 'Blazer de linho cru', genero: 'feminino', categoria: 'blazers',
       cor: { nome: 'Cru', hex: '#e8dcc6' }, tecido: 'Linho', modelagem: 'No corpo', preco: 699, novidade: true,
       descricao: 'Blazer de estrutura leve, ombro natural e dois botões. Veste bem com calça de cintura alta e com jeans.',
       medidaChave: 'Busto', folgaAlvo: 8,
@@ -62,7 +62,7 @@
       fotos: ['blazer-linho-cru', 'corpoTrabalho'], looks: ['trabalho']
     },
     {
-      id: 'camisa-seda-marfim', ref: 'DEMO-F02', nome: 'Camisa de seda marfim', genero: 'feminino', categoria: 'camisas',
+      id: 'camisa-seda-marfim', modelo: { altura: '1,70 m', tamanho: 'P' }, ref: 'DEMO-F02', nome: 'Camisa de seda marfim', genero: 'feminino', categoria: 'camisas',
       cor: { nome: 'Marfim', hex: '#f1e8d6' }, tecido: 'Seda', modelagem: 'Amplo', preco: 459, novidade: true,
       descricao: 'Camisa de caimento fluido, gola macia e botões encapados. Pode ser usada solta ou por dentro da calça.',
       medidaChave: 'Busto', folgaAlvo: 14,
@@ -72,7 +72,7 @@
       fotos: ['camisa-seda-marfim', 'corpoDia'], looks: ['dia']
     },
     {
-      id: 'calca-alfaiataria-cintura-alta', ref: 'DEMO-F03', nome: 'Calça de alfaiataria cintura alta', genero: 'feminino', categoria: 'calcas',
+      id: 'calca-alfaiataria-cintura-alta', modelo: { altura: '1,72 m', tamanho: 'P' }, ref: 'DEMO-F03', nome: 'Calça de alfaiataria cintura alta', genero: 'feminino', categoria: 'calcas',
       cor: { nome: 'Areia', hex: '#ddd0b8' }, tecido: 'Viscose', modelagem: 'Amplo', preco: 389, novidade: false,
       descricao: 'Pernas amplas, pregas frontais e cintura alta. Alonga a silhueta e acompanha blazer ou camisa.',
       medidaChave: 'Quadril', folgaAlvo: 12,
@@ -82,8 +82,8 @@
       fotos: ['calca-alfaiataria-cintura-alta', 'corpoDia'], looks: ['trabalho', 'dia']
     },
     {
-      id: 'blusa-malha-canelada', ref: 'DEMO-F04', nome: 'Blusa de malha canelada', genero: 'feminino', categoria: 'malhas',
-      cor: { nome: 'Off-white', hex: '#eee6d6' }, tecido: 'Malha', modelagem: 'Ajustado', preco: 199, novidade: false,
+      id: 'blusa-malha-canelada', modelo: { altura: '1,72 m', tamanho: 'P' }, ref: 'DEMO-F04', nome: 'Blusa de malha canelada', genero: 'feminino', categoria: 'malhas',
+      cor: { nome: 'Off-white', hex: '#eee6d6' }, tecido: 'Malha', modelagem: 'Ajustado', preco: 199, precoDe: 249, novidade: false,
       descricao: 'Regata de malha canelada com decote arredondado. Base para o blazer e para os dias quentes.',
       medidaChave: 'Busto', folgaAlvo: 2,
       tamanhos: ['PP', 'P', 'M', 'G', 'GG'], estoque: estoque([4, 5, 5, 3, 2]),
@@ -92,7 +92,7 @@
       fotos: ['blusa-malha-canelada', 'corpoTrabalho'], looks: ['trabalho']
     },
     {
-      id: 'cinto-couro-conhaque', ref: 'DEMO-F05', nome: 'Cinto de couro conhaque', genero: 'feminino', categoria: 'acessorios',
+      id: 'cinto-couro-conhaque', modelo: { altura: '1,70 m', tamanho: 'M' }, ref: 'DEMO-F05', nome: 'Cinto de couro conhaque', genero: 'feminino', categoria: 'acessorios',
       cor: { nome: 'Conhaque', hex: '#8a5532' }, tecido: 'Couro', modelagem: 'Ajustado', preco: 179, novidade: false,
       descricao: 'Cinto fino de couro liso com fivela dourada retangular.',
       medidaChave: 'Cintura', folgaAlvo: 4,
@@ -102,7 +102,7 @@
       fotos: ['cinto-couro-conhaque', 'corpoDia'], looks: ['dia']
     },
     {
-      id: 'blazer-la-marinho', ref: 'DEMO-M01', nome: 'Blazer de lã marinho', genero: 'masculino', categoria: 'blazers',
+      id: 'blazer-la-marinho', modelo: { altura: '1,84 m', tamanho: 'M' }, ref: 'DEMO-M01', nome: 'Blazer de lã marinho', genero: 'masculino', categoria: 'blazers',
       cor: { nome: 'Marinho', hex: '#1f2b45' }, tecido: 'Lã', modelagem: 'No corpo', preco: 899, novidade: true,
       descricao: 'Blazer de lã texturizada, dois botões e bolsos com lapela. Funciona com camisa social ou com malha.',
       medidaChave: 'Tórax', folgaAlvo: 8,
@@ -112,7 +112,7 @@
       fotos: ['blazer-la-marinho', 'corpoJantar'], looks: ['jantar']
     },
     {
-      id: 'camisa-social-marinho', ref: 'DEMO-M02', nome: 'Camisa social marinho', genero: 'masculino', categoria: 'camisas',
+      id: 'camisa-social-marinho', modelo: { altura: '1,84 m', tamanho: 'M' }, ref: 'DEMO-M02', nome: 'Camisa social marinho', genero: 'masculino', categoria: 'camisas',
       cor: { nome: 'Marinho', hex: '#1c2236' }, tecido: 'Algodão', modelagem: 'No corpo', preco: 329, novidade: false,
       descricao: 'Camisa de algodão com colarinho clássico. Fica bem abotoada até em cima ou aberta, sem gravata.',
       medidaChave: 'Tórax', folgaAlvo: 8,
@@ -122,7 +122,7 @@
       fotos: ['camisa-social-marinho', 'corpoJantar'], looks: ['jantar']
     },
     {
-      id: 'calca-alfaiataria-clara', ref: 'DEMO-M03', nome: 'Calça de alfaiataria clara', genero: 'masculino', categoria: 'calcas',
+      id: 'calca-alfaiataria-clara', modelo: { altura: '1,84 m', tamanho: 'M' }, ref: 'DEMO-M03', nome: 'Calça de alfaiataria clara', genero: 'masculino', categoria: 'calcas',
       cor: { nome: 'Areia', hex: '#d9cbb0' }, tecido: 'Algodão', modelagem: 'No corpo', preco: 399, novidade: false,
       descricao: 'Perna reta com vinco e cintura média. Acompanha blazer escuro e camisa de linho.',
       medidaChave: 'Quadril', folgaAlvo: 8,
@@ -132,7 +132,7 @@
       fotos: ['calca-alfaiataria-clara', 'corpoJantar'], looks: ['jantar']
     },
     {
-      id: 'camisa-linho-cru', ref: 'DEMO-M04', nome: 'Camisa de linho cru', genero: 'masculino', categoria: 'camisas',
+      id: 'camisa-linho-cru', modelo: { altura: '1,82 m', tamanho: 'M' }, ref: 'DEMO-M04', nome: 'Camisa de linho cru', genero: 'masculino', categoria: 'camisas',
       cor: { nome: 'Cru', hex: '#ebe1cd' }, tecido: 'Linho', modelagem: 'Amplo', preco: 349, novidade: true,
       descricao: 'Camisa de linho com um bolso no peito e caimento solto. Pede manga dobrada uma vez.',
       medidaChave: 'Tórax', folgaAlvo: 14,
@@ -142,8 +142,8 @@
       fotos: ['camisa-linho-cru', 'corpoFimDeSemana'], looks: ['fimdesemana']
     },
     {
-      id: 'malha-leve-camelo', ref: 'DEMO-M05', nome: 'Malha leve camelo', genero: 'masculino', categoria: 'malhas',
-      cor: { nome: 'Camelo', hex: '#b58a5c' }, tecido: 'Malha', modelagem: 'No corpo', preco: 299, novidade: false,
+      id: 'malha-leve-camelo', modelo: { altura: '1,82 m', tamanho: 'M' }, ref: 'DEMO-M05', nome: 'Malha leve camelo', genero: 'masculino', categoria: 'malhas',
+      cor: { nome: 'Camelo', hex: '#b58a5c' }, tecido: 'Malha', modelagem: 'No corpo', preco: 299, precoDe: 379, novidade: false,
       descricao: 'Tricô fino de gola careca. Vai sobre os ombros nos dias quentes e por cima da camisa no fim da tarde.',
       medidaChave: 'Tórax', folgaAlvo: 8,
       tamanhos: ['P', 'M', 'G', 'GG'], estoque: estoque([0, 3, 4, 2]),
@@ -152,7 +152,7 @@
       fotos: ['malha-leve-camelo', 'corpoFimDeSemana'], looks: ['fimdesemana']
     },
     {
-      id: 'calca-reta-grafite', ref: 'DEMO-M06', nome: 'Calça reta grafite', genero: 'masculino', categoria: 'calcas',
+      id: 'calca-reta-grafite', modelo: { altura: '1,82 m', tamanho: 'M' }, ref: 'DEMO-M06', nome: 'Calça reta grafite', genero: 'masculino', categoria: 'calcas',
       cor: { nome: 'Grafite', hex: '#3a3a3c' }, tecido: 'Algodão', modelagem: 'No corpo', preco: 349, novidade: false,
       descricao: 'Sarja de algodão com perna reta. Casual, mas arrumada o bastante para o trabalho.',
       medidaChave: 'Quadril', folgaAlvo: 8,
@@ -178,12 +178,50 @@
     { id: 'acessorios', nome: 'Acessórios', capa: 'cinto-couro-conhaque' }
   ];
 
+
+  // Condições comerciais usadas NESTA DEMONSTRAÇÃO. Em produção vêm da plataforma (e precisam
+  // ser confirmadas pela Casa Lorenzi antes de aparecer no site).
+  const COMERCIAL = {
+    parcelasMax: 6, parcelaMinima: 80,          // até 6x sem juros, parcela mínima de R$ 80
+    freteGratisAcima: 599,                       // frete Econômico grátis a partir deste valor
+    trocaDias: 30,                               // troca grátis em até 30 dias, na loja ou pelos Correios
+    retiradaDias: 2,                             // retirada na loja em até 2 dias úteis
+    whatsapp: ''                                 // número da consultora (vazio na demonstração)
+  };
+
+  // Lojas de demonstração, uma ou duas por região de CEP (primeiro dígito)
+  const LOJAS = [
+    { id: 'paulista', nome: 'Loja Paulista', cidade: 'São Paulo, SP', regiao: [0, 1] },
+    { id: 'moema', nome: 'Loja Moema', cidade: 'São Paulo, SP', regiao: [0, 1] },
+    { id: 'campinas', nome: 'Loja Campinas', cidade: 'Campinas, SP', regiao: [1] },
+    { id: 'ipanema', nome: 'Loja Ipanema', cidade: 'Rio de Janeiro, RJ', regiao: [2] },
+    { id: 'vitoria', nome: 'Loja Vitória', cidade: 'Vitória, ES', regiao: [2] },
+    { id: 'savassi', nome: 'Loja Savassi', cidade: 'Belo Horizonte, MG', regiao: [3] },
+    { id: 'salvador', nome: 'Loja Salvador', cidade: 'Salvador, BA', regiao: [4] },
+    { id: 'recife', nome: 'Loja Boa Viagem', cidade: 'Recife, PE', regiao: [5] },
+    { id: 'fortaleza', nome: 'Loja Aldeota', cidade: 'Fortaleza, CE', regiao: [6] },
+    { id: 'brasilia', nome: 'Loja Asa Sul', cidade: 'Brasília, DF', regiao: [7] },
+    { id: 'goiania', nome: 'Loja Goiânia', cidade: 'Goiânia, GO', regiao: [7] },
+    { id: 'batel', nome: 'Loja Batel', cidade: 'Curitiba, PR', regiao: [8] },
+    { id: 'floripa', nome: 'Loja Florianópolis', cidade: 'Florianópolis, SC', regiao: [8] },
+    { id: 'moinhos', nome: 'Loja Moinhos', cidade: 'Porto Alegre, RS', regiao: [9] }
+  ];
+
+  // O que combina com cada categoria (para "Combine com esta peça" e sugestões da sacola)
+  const COMBINA = {
+    blazers: ['camisas', 'calcas', 'malhas'],
+    camisas: ['calcas', 'blazers', 'acessorios'],
+    calcas: ['camisas', 'blazers', 'acessorios', 'malhas'],
+    malhas: ['calcas', 'blazers'],
+    acessorios: ['calcas', 'camisas']
+  };
+
   function foto(chave) { return FOTO.pecas[chave] || FOTO[chave] || ''; }
 
   window.CL_CATALOGO = {
     demo: true,
     aviso: 'Loja de demonstração: produtos, preços, estoque, medidas, composição e frete são exemplos, não dados oficiais.',
-    produtos, looks, categorias, corpo: CORPO, foto,
+    produtos, looks, categorias, corpo: CORPO, foto, comercial: COMERCIAL, lojas: LOJAS, combina: COMBINA,
     produto(id) { return produtos.find(p => p.id === id) || null; },
     look(id) { return looks.find(l => l.id === id) || null; },
     categoria(id) { return categorias.find(c => c.id === id) || null; }
