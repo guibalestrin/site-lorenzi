@@ -66,9 +66,14 @@
     const r = prng(semente(id));
     const total = 14 + Math.floor(r() * 48);
     const pesoCai = p.modelagem === 'Ajustado' ? { certo: 68, pequeno: 24, grande: 8 } : p.modelagem === 'Amplo' ? { certo: 74, pequeno: 6, grande: 20 } : { certo: 80, pequeno: 11, grande: 9 };
+    // notas primeiro; depois ajusta até a média arredondada ficar entre 4,7 e 4,9
+    const notas = Array.from({ length: total }, () => Number(sorteia(r, { 5: 80, 4: 16, 3: 3, 2: 1 })));
+    const mediaDe = () => Math.round(notas.reduce((a, b) => a + b, 0) / total * 10) / 10;
+    while (mediaDe() < 4.7) notas[notas.indexOf(Math.min(...notas))]++;
+    while (mediaDe() > 4.9) notas[notas.indexOf(5)] = 4;
     const lista = [];
     for (let i = 0; i < total; i++) {
-      const nota = Number(sorteia(r, { 5: 64, 4: 25, 3: 7, 2: 3, 1: 1 }));
+      const nota = notas[i];
       const meio = Math.floor(p.tamanhos.length / 2);
       const pesoT = {}; p.tamanhos.forEach((t, k) => { pesoT[t] = 6 - Math.abs(k - meio) * 2 + 1; });
       const tamanho = sorteia(r, pesoT);
