@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finalizar compra · Casa Lorenzi</title>
+<meta name="description" content="Checkout da Casa Lorenzi em uma página, sem cadastro.">
+<meta name="theme-color" content="#efe8dc">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316120f'/%3E%3Cpath fill-rule='evenodd' d='M32 10 54 32 32 54 10 32Z M32 20 20 32 32 44 44 32Z' fill='%23efe8dc'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://d2ol7oe51mr4n9.cloudfront.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/loja.css">
+<link rel="stylesheet" href="assets/paginas.css">
+</head>
+<body class="loja" data-pagina="checkout">
+<main id="principal" tabindex="-1">
+<div class="wrap" id="checkout">
+  <ol class="migalha"><li><a href="sacola.html">Sacola</a></li><li aria-current="page">Finalizar compra</li></ol>
+  <h1 class="h1">Finalizar compra</h1>
+  <p class="lede">Sem cadastro e sem senha. Três passos nesta mesma página.</p>
+  <div class="ck-grid">
+  <form id="form-checkout" novalidate>
+    <div class="msg erro" id="erros" role="alert" hidden></div>
+    <section class="ck-passo" aria-labelledby="p1"><h2 id="p1" class="ck-t"><span class="n">1</span>Contato</h2>
+      <div class="campo"><label for="f-email">E-mail</label><span class="dica" id="f-email-d">Para a confirmação e o rastreio do pedido.</span><input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="f-email-d e-email"><p class="erro-campo" id="e-email" hidden></p></div>
+      <div class="linha"><div class="campo"><label for="f-nome">Nome completo</label><input id="f-nome" name="nome" type="text" autocomplete="name" required aria-describedby="e-nome"><p class="erro-campo" id="e-nome" hidden></p></div><div class="campo"><label for="f-cpf">CPF</label><span class="dica" id="f-cpf-d">Exigido para emitir a nota fiscal.</span><input id="f-cpf" name="cpf" type="text" inputmode="numeric" autocomplete="off" data-mascara="cpf" required aria-describedby="f-cpf-d e-cpf"><p class="erro-campo" id="e-cpf" hidden></p></div></div>
+      <div class="campo"><label for="f-cel">Celular (opcional)</label><span class="dica" id="f-cel-d">Só para avisos de entrega.</span><input id="f-cel" name="cel" type="tel" inputmode="tel" autocomplete="tel-national" data-mascara="cel" aria-describedby="f-cel-d e-cel"><p class="erro-campo" id="e-cel" hidden></p></div>
+    </section>
+    <section class="ck-passo" aria-labelledby="p2"><h2 id="p2" class="ck-t"><span class="n">2</span>Entrega</h2>
+      <div class="campo ck-cep"><label for="f-cep">CEP</label><input id="f-cep" name="cep" type="text" inputmode="numeric" autocomplete="postal-code" data-mascara="cep" maxlength="9" required aria-describedby="cep-status e-cep"><p class="dica" id="cep-status" aria-live="polite">O endereço é preenchido pelo CEP.</p><p class="erro-campo" id="e-cep" hidden></p></div>
+      <div class="campo"><label for="f-rua">Endereço</label><input id="f-rua" name="rua" type="text" autocomplete="address-line1" required aria-describedby="e-rua"><p class="erro-campo" id="e-rua" hidden></p></div>
+      <div class="linha"><div class="campo"><label for="f-numero">Número</label><input id="f-numero" name="numero" type="text" autocomplete="off" required aria-describedby="e-numero"><p class="erro-campo" id="e-numero" hidden></p></div><div class="campo"><label for="f-complemento">Complemento (opcional)</label><input id="f-complemento" name="complemento" type="text" autocomplete="address-line2" aria-describedby="e-complemento"><p class="erro-campo" id="e-complemento" hidden></p></div></div>
+      <div class="linha-3"><div class="campo"><label for="f-bairro">Bairro</label><input id="f-bairro" name="bairro" type="text" autocomplete="address-level3" required aria-describedby="e-bairro"><p class="erro-campo" id="e-bairro" hidden></p></div><div class="campo"><label for="f-cidade">Cidade</label><input id="f-cidade" name="cidade" type="text" autocomplete="address-level2" required aria-describedby="e-cidade"><p class="erro-campo" id="e-cidade" hidden></p></div><div class="campo"><label for="f-uf">UF</label><input id="f-uf" name="uf" type="text" autocomplete="address-level1" maxlength="2" required aria-describedby="e-uf"><p class="erro-campo" id="e-uf" hidden></p></div></div>
+      <fieldset class="ck-fretes"><legend class="rot">Forma de entrega</legend><div id="fretes"></div></fieldset>
+    </section>
+    <section class="ck-passo" aria-labelledby="p3"><h2 id="p3" class="ck-t"><span class="n">3</span>Pagamento</h2>
+      <fieldset class="pgs"><legend class="sr-only">Forma de pagamento</legend>
+        <label class="opc-pg"><input type="radio" name="metodo" value="cartao" checked><span><b>Cartão de crédito</b><small>Visa, Mastercard, Elo e outras bandeiras</small></span></label>
+        <div class="pg-bloco" id="pg-cartao"><p class="teste"><span class="ex">teste</span> Aprovado: 4111 1111 1111 1111 · Recusado: 4000 0000 0000 0002 · Sem resposta do banco: 4000 0000 0000 0119. Qualquer validade futura e CVV de 3 números.</p></div>
+        <label class="opc-pg"><input type="radio" name="metodo" value="pix"><span><b>Pix</b><small>O código aparece na tela depois de confirmar</small></span></label>
+        <div class="pg-bloco" id="pg-pix" hidden><p>Ao confirmar, geramos um código Pix copia e cola. O pedido é aprovado quando o pagamento cai.</p></div>
+        <label class="opc-pg"><input type="radio" name="metodo" value="cartao_lorenzi"><span><b>Cartão Casa Lorenzi</b><small>Pagamento no site em ajuste</small></span></label>
+        <div class="pg-bloco aviso-pg" id="pg-lorenzi" hidden><p><b>O pagamento com o Cartão Casa Lorenzi no site está em ajuste.</b> Se ele não for aceito, nada é cobrado e você conclui com cartão de crédito ou Pix, sem perder a sacola. Nas lojas o cartão funciona normalmente.</p></div>
+        <fieldset class="dados-cartao" id="dados-cartao"><legend class="rot">Dados do cartão de crédito</legend>
+          <div class="campo"><label for="f-c-numero">Número do cartão</label><input id="f-c-numero" name="c-numero" type="text" inputmode="numeric" autocomplete="cc-number" data-mascara="cartao" aria-describedby="e-c-numero"><p class="erro-campo" id="e-c-numero" hidden></p></div>
+          <div class="campo"><label for="f-c-nome">Nome impresso no cartão</label><input id="f-c-nome" name="c-nome" type="text" autocomplete="cc-name" aria-describedby="e-c-nome"><p class="erro-campo" id="e-c-nome" hidden></p></div>
+          <div class="linha"><div class="campo"><label for="f-c-validade">Validade (MM/AA)</label><input id="f-c-validade" name="c-validade" type="text" inputmode="numeric" autocomplete="cc-exp" data-mascara="validade" placeholder="MM/AA" aria-describedby="e-c-validade"><p class="erro-campo" id="e-c-validade" hidden></p></div><div class="campo"><label for="f-c-cvv">Código de segurança</label><input id="f-c-cvv" name="c-cvv" type="text" inputmode="numeric" autocomplete="cc-csc" data-mascara="cvv" aria-describedby="e-c-cvv"><p class="erro-campo" id="e-c-cvv" hidden></p></div></div>
+          <p class="nota">Pagamento à vista nesta demonstração. Parcelamento depende das condições comerciais da Casa Lorenzi.</p>
+        </fieldset>
+      </fieldset>
+      <div class="msg erro falha" id="falha" tabindex="-1" role="alert" hidden></div>
+      <div class="msg info pix-codigo" id="pix-codigo" hidden></div>
+      <button class="btn grande largo" type="submit" id="pagar">Pagar</button>
+      <p class="nota seguro">Loja de demonstração: nenhum valor é cobrado e nenhum dado sai do seu navegador.</p>
+    </section>
+  </form>
+  <aside class="resumo ck-resumo" aria-labelledby="ck-res">
+    <div class="ck-res-topo"><h2 id="ck-res" class="h2">Seu pedido</h2><a href="sacola.html">Editar sacola</a></div>
+    <ul class="ck-itens" id="resumo-itens"></ul>
+    <dl><div><dt>Subtotal</dt><dd id="r-sub"></dd></div><div><dt>Frete</dt><dd id="r-frete"></dd></div><div class="total"><dt>Total</dt><dd id="r-total"></dd></div></dl>
+    <p class="nota">Valores de exemplo desta demonstração.</p>
+    <div class="assist-box"><button class="link-ajuda" type="button" data-ajuda="sacola" data-sacola="1">Prefere comprar com ajuda?</button><p>Opcional. Você pode concluir aqui sem falar com ninguém.</p></div>
+  </aside>
+  </div>
+</div>
+</main>
+<footer id="rodape"></footer>
+<script src="assets/catalogo.js"></script>
+<script src="assets/loja.js"></script>
+<script src="assets/pagamento.js"></script>
+<script src="assets/p-checkout.js"></script>
+</body>
+</html>

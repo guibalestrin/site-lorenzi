@@ -1,0 +1,8 @@
+{
+  "name": "casa-lorenzi-site",
+  "private": true,
+  "description": "Site estático da Casa Lorenzi; a pasta site/ é publicada sem build.",
+  "scripts": {
+    "test": "node --test tests/pagamento.test.js"
+  }
+}

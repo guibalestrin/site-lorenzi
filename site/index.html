@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/loja.css">
 <style>
 :root{
   --canvas:#efe8dc;
@@ -64,49 +65,6 @@ button,input,select{font:inherit;color:inherit}
 .ambient::after{content:"";position:absolute;inset:0;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9 .45' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 @keyframes glow{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(5%,-4%,0)}}
 body.paused *,body.paused *::before,body.paused *::after{animation-play-state:paused!important}
-
-/* navegação */
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:28px;padding:18px clamp(16px,4vw,44px) 30px;color:var(--on-ink);background:linear-gradient(rgba(16,12,9,.78),rgba(16,12,9,.42) 55%,rgba(16,12,9,0));transition:background .5s var(--ease-out),color .5s var(--ease-out),padding .5s var(--ease-out)}
-.nav .logo{display:block;width:150px;color:inherit;filter:drop-shadow(0 1px 6px rgba(10,7,5,.7));transition:filter .5s var(--ease-out)}
-.nav ul a{text-shadow:0 1px 2px rgba(10,7,5,.9),0 2px 10px rgba(10,7,5,.7)}
-.nav.solid{color:var(--text-primary);background:rgba(239,232,220,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding-bottom:18px}
-.nav.solid .logo{filter:none}
-.nav.solid ul a{text-shadow:none}
-.nav ul{display:flex;gap:24px;list-style:none;margin:0 0 0 auto;padding:0;font-size:14px;letter-spacing:.04em}
-.nav ul a{text-decoration:none;opacity:.86;transition:opacity .3s var(--ease-out)}
-.nav ul a:hover{opacity:1}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--accent);background:var(--accent);color:var(--canvas);padding:14px 24px;border-radius:999px;font-family:var(--body);font-weight:600;font-size:16px;letter-spacing:.01em;text-decoration:none;cursor:pointer;transition:background .35s var(--ease-out),color .35s var(--ease-out),transform .35s var(--ease-out),border-color .35s var(--ease-out)}
-.btn:hover{background:var(--accent-hover);border-color:var(--accent-hover);transform:translateY(-1px)}
-.btn.light{background:var(--canvas);border-color:var(--canvas);color:var(--ink)}
-.btn.light:hover{background:#fff8ee;border-color:#fff8ee}
-.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
-.btn.ghost:hover{background:rgba(239,232,220,.1)}
-.nav .btn{padding:10px 18px;font-size:14px}
-.nav:not(.solid) .btn{background:var(--canvas);border-color:var(--canvas);color:var(--ink)}
-.menubtn{display:none;position:relative;width:44px;height:44px;border:1px solid currentColor;border-radius:50%;background:transparent;color:inherit;cursor:pointer;flex:none}
-.menubtn i{position:absolute;left:13px;right:13px;height:1.5px;background:currentColor;transition:transform .45s var(--ease-out),top .45s var(--ease-out)}
-.menubtn i:first-of-type{top:17px}.menubtn i:last-of-type{top:25px}
-.menu-open .menubtn i:first-of-type{top:21px;transform:rotate(45deg)}
-.menu-open .menubtn i:last-of-type{top:21px;transform:rotate(-45deg)}
-.menu{position:fixed;inset:0;z-index:45;background:var(--canvas);padding:96px 24px 36px;display:flex;flex-direction:column;gap:26px;overflow-y:auto;opacity:0;transform:translateY(-12px);transition:opacity .45s var(--ease-out),transform .45s var(--ease-out)}
-.menu[hidden]{display:none}
-.menu.on{opacity:1;transform:none}
-.menu ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-.menu li a{display:flex;align-items:center;min-height:58px;border-bottom:1px solid var(--line);font-family:var(--display);font-weight:500;font-size:30px;text-decoration:none;color:var(--text-primary)}
-.menu .btn{align-self:stretch;padding:16px 22px;font-size:17px}
-.menu p{margin:0;font-size:13px;color:var(--text-secondary);letter-spacing:.08em}
-.menu-open .nav{color:var(--text-primary);background:rgba(239,232,220,.96);border-bottom:1px solid var(--line)}
-.menu-open .nav .logo,.menu-open .nav ul a{filter:none;text-shadow:none}
-html.menu-open{overflow:hidden}
-@media (max-width:1060px){.nav ul{display:none}.nav .navcta{margin-left:auto}.menubtn{display:block}}
-@media (max-width:540px){.nav .navcta{display:none}.menubtn{margin-left:auto}}
-@media (max-width:420px){.nav .logo{width:118px}.nav .btn{padding:9px 14px;font-size:13px}}
-@media (pointer:coarse){.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
-  .nav .logo{padding:11px 0;margin:-11px 0}
-  .look a{min-height:44px;margin-top:2px}
-  .foot ul a{display:inline-flex;align-items:center;min-height:44px}
-  .foot ul{line-height:1.6}
-  .textlink{min-height:44px}}
 
 /* hero */
 .hero{position:relative;height:1000vh;background:var(--ink)}
@@ -160,9 +118,9 @@ html.menu-open{overflow:hidden}
 /* celular e tablet em pé: o mesmo filme numa janela no alto, as frases embaixo */
 @media (max-width:720px),(orientation:portrait) and (max-width:1024px),(orientation:portrait) and (pointer:coarse){
   .hero{height:700vh}
-  .stage .poster,.stage video{inset:auto 0;top:64px;width:100%;height:min(75vw,42svh);object-position:58% 50%;background-position:58% 50%;-webkit-mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent);mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent)}
+  .stage .poster,.stage video{inset:auto 0;top:68px;width:100%;height:min(75vw,42svh);object-position:58% 50%;background-position:58% 50%;-webkit-mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent);mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent)}
   .scrim,.band::before,.progress{display:none}
-  .band,.band.left,.band.right,.band.first,.band.center,.band.settle{left:20px;right:20px;width:auto;top:calc(64px + min(75vw,42svh) + 22px);transform:none;text-align:left}
+  .band,.band.left,.band.right,.band.first,.band.center,.band.settle{left:20px;right:20px;width:auto;top:calc(68px + min(75vw,42svh) + 22px);transform:none;text-align:left}
   .band h1,.band h2,.settle h2{font-size:clamp(28px,8vw,44px);max-width:none;margin-inline:0}
   .band .sub{font-size:16px;margin-top:12px}
   .band.right .sub{margin-left:0;max-width:none}
@@ -239,6 +197,52 @@ section{position:relative;scroll-margin-top:76px}
 .swipe .dots{display:flex;gap:6px}
 .swipe .dots i{width:7px;height:7px;border:1.5px solid var(--detail);transform:rotate(45deg);transition:background .35s var(--ease-out)}
 .swipe .dots i.on{background:var(--detail)}
+
+/* bloco comercial logo depois do filme */
+#comprar{padding:clamp(96px,11vw,150px) 0 clamp(40px,5vw,70px)}
+.comprar-in{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(30px,5vw,80px);align-items:end}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn.grande{min-height:58px;padding:16px 34px;font-size:18px}
+#comprar .btn.ghost{color:var(--accent);border-color:var(--line-strong)}
+#comprar .btn.ghost:hover{background:var(--accent-muted);border-color:var(--accent)}
+.atalhos{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:26px 0 0;padding:0}
+.atalhos a{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2);text-decoration:none;font-weight:500;transition:border-color .3s var(--ease-out),background .3s var(--ease-out)}
+.atalhos a:hover{border-color:var(--accent)}
+.demo-nota{margin:20px 0 0;font-size:14px;color:var(--text-secondary)}
+.comprar-foto{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:4/5;background:var(--panel)}
+.comprar-foto img{width:100%;height:100%;object-fit:cover}
+.comprar-foto a{position:absolute;left:14px;right:14px;bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;background:rgba(246,241,232,.94);text-decoration:none;font-weight:600}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+.sec-head h2{font-family:var(--display);font-weight:500;font-size:clamp(28px,3vw,40px);margin:0;line-height:1.1}
+.sec-head a{font-weight:600;color:var(--accent);text-decoration:none;border-bottom:1.5px solid var(--accent-muted);padding:8px 0 2px}
+.sec-head a:hover{border-color:var(--accent)}
+#categorias{padding:clamp(40px,5vw,70px) 0}
+.cats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.cat{position:relative;display:block;border-radius:16px;overflow:hidden;background:var(--panel);aspect-ratio:3/4;text-decoration:none}
+.cat img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease-out)}
+.cat:hover img{transform:scale(1.04)}
+.cat span{position:absolute;left:10px;right:10px;bottom:10px;display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(246,241,232,.94);font-weight:600;font-size:15.5px}
+.cat small{font-weight:400;color:var(--text-secondary);font-size:13px}
+#novidades{padding:clamp(40px,5vw,70px) 0 clamp(70px,8vw,110px)}
+.look .acoes{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+/* variações de botão sobre fundo escuro (filme, atendimento) */
+.btn.light{background:var(--canvas);border-color:var(--canvas);color:var(--ink)}
+.btn.light:hover{background:#fff8ee;border-color:#fff8ee}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.ghost:hover{background:rgba(239,232,220,.1)}
+.look .comprar-look{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border-radius:999px;background:var(--accent);color:var(--canvas);font-weight:600;text-decoration:none;margin-top:6px}
+.look .comprar-look::after{display:none}
+.look .comprar-look:hover{background:var(--accent-hover)}
+.at-cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.at-cta a.textlink-l{color:var(--on-ink);font-weight:600;text-decoration:underline;text-underline-offset:5px;min-height:44px;display:inline-flex;align-items:center}
+@media (max-width:1040px){.comprar-in{grid-template-columns:1fr}.comprar-foto{aspect-ratio:16/10}.cats{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:720px){
+  .cats{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 8px;scrollbar-width:none}
+  .cats::-webkit-scrollbar{display:none}
+  .cat{flex:0 0 42%;scroll-snap-align:start}
+  .cta-row .btn{flex:1 1 100%}
+  .comprar-foto{display:none}
+}
 
 /* B. caimento: o momento interativo */
 #caimento{padding:clamp(80px,10vw,140px) 0;background:var(--panel)}
@@ -329,11 +333,11 @@ section{position:relative;scroll-margin-top:76px}
 .half.troca .days b{font-family:var(--display);font-weight:500;font-size:clamp(64px,7vw,98px);line-height:.9;color:var(--detail)}
 .half.troca .days span{font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary)}
 .half.troca .pending{margin-top:22px;padding:14px 16px;border:1px dashed var(--line-strong);border-radius:12px;font-family:var(--mono);font-size:14px;line-height:1.6;color:var(--text-secondary)}
-.card{width:min(320px,100%);aspect-ratio:1.586;border-radius:16px;margin:0 0 30px;position:relative;background:linear-gradient(135deg,#2a2018,#16120f 60%);box-shadow:0 26px 50px -20px rgba(0,0,0,.6);padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between;color:var(--on-ink);transform:rotate(-4deg);transition:transform .9s var(--ease-out)}
-.half.cartao:hover .card{transform:rotate(-1deg) translateY(-4px)}
-.card .lg{width:62%}
-.card .chip{width:38px;height:28px;border-radius:6px;background:linear-gradient(135deg,#c99a6f,#8a5532)}
-.card::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,transparent 30%,rgba(255,240,220,.14) 46%,transparent 60%);animation:sheen 7s var(--ease-io) infinite;animation-delay:-3s}
+.cartao-ilus{width:min(320px,100%);aspect-ratio:1.586;border-radius:16px;margin:0 0 30px;position:relative;background:linear-gradient(135deg,#2a2018,#16120f 60%);box-shadow:0 26px 50px -20px rgba(0,0,0,.6);padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between;color:var(--on-ink);transform:rotate(-4deg);transition:transform .9s var(--ease-out)}
+.half.cartao:hover .cartao-ilus{transform:rotate(-1deg) translateY(-4px)}
+.cartao-ilus .lg{width:62%}
+.cartao-ilus .chip{width:38px;height:28px;border-radius:6px;background:linear-gradient(135deg,#c99a6f,#8a5532)}
+.cartao-ilus::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,transparent 30%,rgba(255,240,220,.14) 46%,transparent 60%);animation:sheen 7s var(--ease-io) infinite;animation-delay:-3s}
 @keyframes sheen{0%,60%{transform:translateX(-30%);opacity:0}75%{opacity:1}100%{transform:translateX(30%);opacity:0}}
 
 /* F. perguntas */
@@ -350,49 +354,13 @@ section{position:relative;scroll-margin-top:76px}
 .faq details[open] .pm::after{transform:translate(-50%,-50%) rotate(0deg)}
 .faq .ans p{margin:0 0 24px;color:var(--text-secondary);max-width:56ch}
 
-/* G. falar com uma consultora */
-#consultora{padding:clamp(90px,11vw,150px) 0;background:var(--panel)}
-.form-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(36px,6vw,90px);align-items:start}
-form{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--panel-2);border:1px solid var(--line);border-radius:22px;padding:clamp(22px,3vw,36px)}
-.field{display:flex;flex-direction:column;gap:8px}
-.field.full{grid-column:1/-1}
-.field>label,fieldset legend{font-size:15px;font-weight:600;color:var(--text-primary)}
-fieldset{border:0;margin:0;padding:0;min-width:0}
-fieldset legend{padding:0;margin-bottom:8px}
-input,select{width:100%;background:#fffaf2;border:1px solid rgba(29,25,21,.4);border-radius:10px;padding:13px 14px;font-size:17px;transition:border-color .3s var(--ease-out)}
-input::placeholder{color:#857b70}
-input:focus,select:focus{outline:none;border-color:var(--accent)}
-input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--text-secondary) 50%),linear-gradient(135deg,var(--text-secondary) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 14px) 55%;background-size:6px 6px;background-repeat:no-repeat;padding-right:40px}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chips label{position:relative;cursor:pointer}
-.chips input{position:absolute;opacity:0;width:1px;height:1px}
-.chips span{display:inline-grid;place-items:center;min-width:52px;height:44px;padding:0 14px;border:1px solid rgba(29,25,21,.4);border-radius:10px;font-size:16px;background:#fffaf2;transition:background .3s var(--ease-out),color .3s var(--ease-out),border-color .3s var(--ease-out)}
-.chips input:checked+span{background:var(--accent);color:var(--canvas);border-color:var(--accent)}
-.chips input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
-form .btn{grid-column:1/-1;margin-top:6px;padding:17px 22px;font-size:17px}
-.fine{grid-column:1/-1;margin:0;font-size:14px;color:var(--text-secondary);text-align:center}
-.success{position:absolute;inset:0;border-radius:22px;background:var(--panel-2);display:grid;place-items:center;text-align:center;padding:28px;opacity:0;visibility:hidden;transform:scale(.98);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out),visibility 0s .6s}
-form.sent .success{opacity:1;visibility:visible;transform:none;transition:opacity .6s var(--ease-out),transform .6s var(--ease-out),visibility 0s}
-.success svg{width:74px;height:74px;margin:0 auto 16px;color:var(--detail)}
-.success svg path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.2s var(--ease-out) .15s}
-form.sent .success svg path{stroke-dashoffset:0}
-.success h3{font-family:var(--display);font-weight:500;font-size:30px;margin:0 0 10px}
-.success p{margin:0 auto;color:var(--text-secondary);max-width:36ch}
-
-/* rodapé */
-footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size:15px}
-.foot{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:30px;align-items:start}
-.foot .flogo{width:220px;color:var(--on-ink);margin-bottom:18px}
-.foot h4{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--on-ink);margin:0 0 12px}
-.foot ul{list-style:none;margin:0;padding:0;line-height:2.1}
-.foot a{text-decoration:none}
-.foot a:hover{color:var(--on-ink)}
-.disclaimer{margin-top:44px;padding-top:22px;border-top:1px solid var(--line-ink);font-size:14px}
-
+/* telas pequenas e toque (seções da apresentação) */
+@media (pointer:coarse){.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  .look a{min-height:44px;margin-top:2px}
+  .textlink{min-height:44px}}
 @media (max-width:1040px){
   .looks{grid-template-columns:1fr 1fr}
-  .oc-head,.at-head,.fit,.faq-grid,.form-grid,.halves{grid-template-columns:1fr}
+  .oc-head,.at-head,.fit,.faq-grid,.halves{grid-template-columns:1fr}
   .fit{grid-template-areas:"text" "fig" "ctl"}
   .fit .figure{max-width:440px;margin-top:30px}
   .oc-head .note{justify-self:start}
@@ -418,8 +386,6 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
   .timeline li{display:grid;grid-template-columns:56px 1fr;gap:0 18px}
   .timeline h3{margin:12px 0 6px}
   .timeline p{grid-column:2}
-  form{grid-template-columns:1fr}
-  .foot{grid-template-columns:1fr}
 }
 
 /* movimento reduzido: tudo no estado final */
@@ -431,12 +397,11 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
   .tape span{opacity:1}
   .storetape line{opacity:1}
   .fact{opacity:1}
-  .card{transform:rotate(-4deg)}
+  .cartao-ilus{transform:rotate(-4deg)}
 }
 </style>
 </head>
-<body>
-<a class="skip" href="#main">Pular para o conteúdo</a>
+<body data-pagina="home">
 <div class="ambient" aria-hidden="true"></div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -445,31 +410,6 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
   </defs>
 </svg>
 
-<nav class="nav" id="nav" aria-label="Principal">
-  <a class="logo" href="#top" aria-label="Casa Lorenzi, voltar ao topo"><svg class="lg" aria-hidden="true"><use href="#cl-logo"/></svg></a>
-  <ul>
-    <li><a href="#pecas">As peças</a></li>
-    <li><a href="#caimento">Caimento</a></li>
-    <li><a href="#atendimento">Atendimento</a></li>
-    <li><a href="#lojas">Lojas</a></li>
-    <li><a href="#trocas">Trocas</a></li>
-    <li><a href="#perguntas">Perguntas</a></li>
-  </ul>
-  <a class="btn navcta" href="#consultora">Falar com uma consultora</a>
-  <button class="menubtn" id="menubtn" type="button" aria-expanded="false" aria-controls="menu"><span class="sr-only">Abrir o menu</span><i aria-hidden="true"></i><i aria-hidden="true"></i></button>
-</nav>
-<div class="menu" id="menu" hidden>
-  <ul>
-    <li><a href="#pecas">As peças</a></li>
-    <li><a href="#caimento">Caimento</a></li>
-    <li><a href="#atendimento">Atendimento</a></li>
-    <li><a href="#lojas">Lojas</a></li>
-    <li><a href="#trocas">Trocas</a></li>
-    <li><a href="#perguntas">Perguntas</a></li>
-  </ul>
-  <a class="btn" href="#consultora">Falar com uma consultora</a>
-  <p class="mono">142 lojas em 21 estados</p>
-</div>
 
 <header class="hero" id="top">
   <div class="stage" id="stage">
@@ -496,7 +436,7 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
     <div class="band center settle fx-rise" data-a="0.88" data-b="1" data-seed="41" data-ramp="0.06" style="--sa:.5">
       <div class="seal"><svg class="lg" role="img" aria-label="Casa Lorenzi, 1989"><use href="#cl-logo"/></svg></div>
       <h2 data-split="words">142 lojas em 21 estados. E alguém para ajudar você a escolher.</h2>
-      <div class="row"><a class="btn light" href="#consultora">Falar com uma consultora</a><a class="btn ghost" href="#pecas">Conhecer as peças</a></div>
+      <div class="row"><a class="btn light" href="loja.html">Comprar as peças</a><button class="btn ghost" type="button" data-ajuda="escolher">Preciso de ajuda para escolher</button></div>
     </div>
 
     <div class="cue" id="cue" aria-hidden="true">
@@ -511,43 +451,71 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
       <div class="seal"><svg class="lg" role="img" aria-label="Casa Lorenzi, 1989"><use href="#cl-logo"/></svg></div>
       <h1>Roupa boa começa no caimento.</h1>
       <p>Moda casual e social para a vida adulta. 142 lojas em 21 estados e uma consultora para ajudar você a escolher.</p>
-      <div class="row"><a class="btn light" href="#consultora">Falar com uma consultora</a><a class="btn ghost" href="#pecas">Conhecer as peças</a></div>
+      <div class="row"><a class="btn light" href="loja.html">Comprar as peças</a><button class="btn ghost" type="button" data-ajuda="escolher">Preciso de ajuda para escolher</button></div>
     </div>
   </div>
 </header>
 
-<main id="main" tabindex="-1">
+<main id="principal" tabindex="-1">
 
-<section id="pecas" aria-labelledby="oc-t">
+<section id="comprar" aria-labelledby="comprar-t">
+  <div class="wrap comprar-in">
+    <div class="reveal">
+      <p class="sec-kicker r"><span class="dia" aria-hidden="true"></span>LOJA ONLINE</p>
+      <h2 class="h-sec r" id="comprar-t">As peças do filme, à venda aqui.</h2>
+      <p class="lede r">Escolha por categoria ou por ocasião, veja as medidas em centímetros e compre sem criar conta. Se quiser, uma consultora ajuda em qualquer etapa.</p>
+      <div class="cta-row r"><a class="btn grande" href="loja.html">Comprar as peças</a><button class="btn ghost" type="button" data-ajuda="escolher">Preciso de ajuda para escolher</button></div>
+      <ul class="atalhos r"><li><a href="loja.html?novidades=1">Novidades</a></li><li><a href="loja.html?g=feminino">Feminino</a></li><li><a href="loja.html?g=masculino">Masculino</a></li><li><a href="look.html">Looks</a></li></ul>
+      <p class="demo-nota r">Loja de demonstração: produtos, preços e estoque são exemplos. <a href="ajuda.html#demo">Saiba mais</a></p>
+    </div>
+    <div class="comprar-foto reveal"><img class="r" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/c0bf5203-9c10-4151-aeb1-fa2d86dfd695.jpg" alt="Mulher de blazer de linho cru e calça clara" loading="lazy" width="900" height="1200"><a class="r" href="produto.html?id=blazer-linho-cru"><span>Blazer de linho cru</span><span aria-hidden="true">Ver a peça</span></a></div>
+  </div>
+</section>
+
+<section id="categorias" aria-labelledby="cat-t">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="cat-t">Comprar por categoria</h2><a href="loja.html">Ver todas as peças</a></div>
+    <div class="cats" id="cats"></div>
+  </div>
+</section>
+
+<section id="looks" aria-labelledby="oc-t">
   <svg class="spiral" viewBox="0 0 200 200" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width=".6" d="M100 100m0-4a4 4 0 1 1-4 4c0-9 9-14 17-12s14 12 10 22-17 16-28 11-16-20-10-31 21-18 34-13 21 21 16 35-22 25-39 21-27-21-24-38 18-30 36-31 34 12 37 30-8 37-25 44-38 4-48-11-11-37 1-51"/></svg>
   <div class="wrap">
     <div class="oc-head reveal">
       <div>
-        <p class="sec-kicker r"><span class="dia" aria-hidden="true"></span>AS PEÇAS</p>
-        <h2 class="h-sec r" id="oc-t">Conheça as peças.</h2>
-        <p class="lede r">Organizadas por ocasião. Em cada uma, o tecido, a modelagem e como ela veste.</p>
+        <p class="sec-kicker r"><span class="dia" aria-hidden="true"></span>LOOKS POR OCASIÃO</p>
+        <h2 class="h-sec r" id="oc-t">Comprar por ocasião.</h2>
+        <p class="lede r">Cada look leva às peças dele. Você compra o look inteiro ou só a peça que quiser.</p>
       </div>
-      <p class="note r">Looks ilustrativos</p>
+      <p class="note r">Peças de demonstração</p>
     </div>
     <div class="looks reveal">
       <article class="look r">
         <div class="ph"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/c0bf5203-9c10-4151-aeb1-fa2d86dfd695.jpg" alt="Mulher de blazer de linho cru, blusa de malha e calça clara diante de uma fachada de pedra" loading="lazy" width="900" height="1200"><span class="tag">Trabalho</span></div>
-        <div class="txt"><h3>Trabalho</h3><p>Blazer com estrutura, sem rigidez. Acompanha o dia inteiro.</p><a href="#consultora" data-ocasiao="Trabalho">Pedir sugestão para esta ocasião</a></div>
+        <div class="txt"><h3>Trabalho</h3><p>Blazer com estrutura, sem rigidez. Acompanha o dia inteiro.</p><span class="acoes"><a class="comprar-look" href="look.html?id=trabalho">Comprar o look</a><a href="loja.html?look=trabalho">Ver as peças separadas</a></span></div>
       </article>
       <article class="look r">
         <div class="ph"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/cc0b3ff8-3877-4639-bde5-0ce3a97c123b.jpg" alt="Homem de blazer de lã azul-marinho, camisa escura sem gravata e calça clara caminhando entre faixas de tecido" loading="lazy" width="900" height="1200"><span class="tag">Reunião e jantar</span></div>
-        <div class="txt"><h3>Reunião e jantar</h3><p>Blazer escuro e camisa sem gravata. Arrumado na medida.</p><a href="#consultora" data-ocasiao="Reunião e jantar">Pedir sugestão para esta ocasião</a></div>
+        <div class="txt"><h3>Reunião e jantar</h3><p>Blazer escuro e camisa sem gravata. Arrumado na medida.</p><span class="acoes"><a class="comprar-look" href="look.html?id=jantar">Comprar o look</a><a href="loja.html?look=jantar">Ver as peças separadas</a></span></div>
       </article>
       <article class="look r">
         <div class="ph"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/452c4fa4-0c5a-4572-be2f-1b0b9580c80b.jpg" alt="Mulher de camisa de seda marfim, cinto conhaque e calça clara numa rua de pedra" loading="lazy" width="900" height="1200"><span class="tag">Evento de dia</span></div>
-        <div class="txt"><h3>Evento de dia</h3><p>Seda, cinto e calça clara. Leve e bem resolvido.</p><a href="#consultora" data-ocasiao="Evento de dia">Pedir sugestão para esta ocasião</a></div>
+        <div class="txt"><h3>Evento de dia</h3><p>Seda, cinto e calça clara. Leve e bem resolvido.</p><span class="acoes"><a class="comprar-look" href="look.html?id=dia">Comprar o look</a><a href="loja.html?look=dia">Ver as peças separadas</a></span></div>
       </article>
       <article class="look r">
         <div class="ph"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/fcf8e7f1-1e83-43f7-ad9c-c62daeb3ae40.jpg" alt="Homem de camisa de linho cru, malha camelo nos ombros e calça escura caminhando numa rua ao fim da tarde" loading="lazy" width="900" height="1200"><span class="tag">Fim de semana</span></div>
-        <div class="txt"><h3>Fim de semana</h3><p>Linho, malha e jeans. Casual, mas escolhido.</p><a href="#consultora" data-ocasiao="Fim de semana">Pedir sugestão para esta ocasião</a></div>
+        <div class="txt"><h3>Fim de semana</h3><p>Linho, malha e calça reta. Casual, mas escolhido.</p><span class="acoes"><a class="comprar-look" href="look.html?id=fimdesemana">Comprar o look</a><a href="loja.html?look=fimdesemana">Ver as peças separadas</a></span></div>
       </article>
     </div>
-    <div class="swipe" aria-hidden="true"><span class="dots"><i class="on"></i><i></i><i></i><i></i></span><span>Deslize para ver as quatro ocasiões</span></div>
+    <div class="swipe" aria-hidden="true"><span class="dots"><i class="on"></i><i></i><i></i><i></i></span><span>Deslize para ver os quatro looks</span></div>
+  </div>
+</section>
+
+<section id="novidades" aria-labelledby="nov-t">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="nov-t">Novidades</h2><a href="loja.html?novidades=1">Ver todas as novidades</a></div>
+    <div class="grade" id="novas"></div>
   </div>
 </section>
 
@@ -557,7 +525,7 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
   <div class="wrap">
     <div class="fit">
       <div class="fittext reveal">
-        <p class="sec-kicker r"><span class="dia" aria-hidden="true"></span>CAIMENTO</p>
+        <p class="sec-kicker r"><span class="dia" aria-hidden="true"></span>GUIA DE CAIMENTO</p>
         <h2 class="h-sec r" id="fit-t">Entenda o caimento antes de provar.</h2>
         <p class="lede r">O que a vendedora explicaria no provador, aqui na tela: a folga da peça, o tecido e as medidas em centímetros.</p>
       </div>
@@ -572,6 +540,7 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
           </div>
           <p class="state-say" id="say" aria-live="polite"><b>No corpo.</b> Folga moderada. Acompanha sem apertar.</p>
           <p class="example">Valores de exemplo, para explicar a ideia. Cada peça tem as próprias medidas.</p>
+          <p class="example"><a class="textlink" href="loja.html">Em cada peça, o guia indica o seu tamanho a partir da sua medida</a></p>
       </div></div>
       <div class="figure" id="figure" aria-hidden="true">
         <svg viewBox="0 0 400 420">
@@ -598,17 +567,17 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
   <div class="wrap">
     <div class="at-head reveal">
       <div>
-        <p class="sec-kicker r"><span class="dia" aria-hidden="true"></span>ATENDIMENTO</p>
-        <h2 class="h-sec r" id="at-t">Uma consultora do outro lado.</h2>
+        <p class="sec-kicker r"><span class="dia" aria-hidden="true"></span>AJUDA, SE VOCÊ QUISER</p>
+        <h2 class="h-sec r" id="at-t">Prefere comprar com ajuda?</h2>
       </div>
-      <p class="lede r">Pelo WhatsApp ou por SMS, do jeito que a Casa Lorenzi já conversa com você.</p>
+      <p class="lede r">A compra no site não pede cadastro nem conversa. Se quiser ajuda, uma consultora atende pelo WhatsApp ou por SMS, do jeito que a Casa Lorenzi já conversa com você, e recebe a peça ou a sacola que você está vendo.</p>
     </div>
     <ol class="timeline" id="timeline">
       <li><div class="n"><span>01</span></div><h3>Conte a ocasião.</h3><p>Para onde vai, como gosta de vestir e o tamanho que costuma usar.</p></li>
       <li><div class="n"><span>02</span></div><h3>Receba a escolha explicada.</h3><p>Sugestões com medidas, tecido e fotos da peça no corpo.</p></li>
       <li><div class="n"><span>03</span></div><h3>Prove onde preferir.</h3><p>Numa das 142 lojas ou em casa, com a mesma consultora acompanhando.</p></li>
     </ol>
-    <div class="at-cta"><a class="btn light" href="#consultora">Falar com uma consultora</a></div>
+    <div class="at-cta"><button class="btn light" type="button" data-ajuda="escolher">Preciso de ajuda para escolher</button><a class="textlink-l" href="loja.html">Ou compre direto na loja</a></div>
   </div>
 </section>
 
@@ -619,7 +588,7 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
       <div>
         <h2 class="r" id="lojas-t"><span class="sr-only">142 </span>lojas em 21 estados.</h2>
         <p class="r">138 em shoppings e 4 de rua. De norte a sul, não só no eixo Rio e São Paulo.</p>
-        <a class="textlink r" href="#consultora">Pergunte à consultora qual fica mais perto de você</a>
+        <a class="textlink r" href="ajuda.html#lojas">Como encontrar a loja mais perto</a>
       </div>
     </div>
     <svg class="storetape" id="storetape" viewBox="0 0 1420 60" aria-hidden="true"></svg>
@@ -634,12 +603,12 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
       <h2 id="troca-t">Trocar é simples.</h2>
       <p>Comprou na loja? Troque em até 30 dias, em qualquer loja do país.</p>
       <div class="days" aria-hidden="true"><b>30</b><span>dias · qualquer loja</span></div>
-      <p class="pending">Compras no site: a regra de troca está sendo confirmada. A consultora confirma antes de você comprar.</p>
+      <p class="pending">Compras no site: a regra de troca ainda está sendo confirmada pela Casa Lorenzi e aparece aqui e em cada peça assim que for definida.</p>
     </div>
     <div class="half cartao r">
-      <div class="card" aria-hidden="true"><svg class="lg"><use href="#cl-logo"/></svg><span class="chip"></span></div>
+      <div class="cartao-ilus" aria-hidden="true"><svg class="lg"><use href="#cl-logo"/></svg><span class="chip"></span></div>
       <h2>O cartão da casa.</h2>
-      <p>A Casa Lorenzi tem cartão próprio. A consultora explica como ele funciona para você.</p>
+      <p>A Casa Lorenzi tem cartão próprio. No site, o pagamento com ele está passando por ajustes; enquanto isso, a compra pode ser concluída com cartão de crédito ou Pix.</p>
     </div>
   </div>
 </section>
@@ -652,76 +621,23 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
     </div>
     <div class="faq">
       <details><summary>A medida é do corpo ou da peça?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Da peça, em centímetros. Assim você compara com uma roupa sua que já veste bem.</p></div></details>
-      <details><summary>Não sei meu tamanho na Casa Lorenzi.<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Conte o tamanho que você usa e como gosta que a roupa caia. A consultora indica a modelagem.</p></div></details>
+      <details><summary>Não sei meu tamanho na Casa Lorenzi.<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Em cada peça, informe a sua medida e o site indica o tamanho e como ele vai cair no corpo. Se ainda ficar em dúvida, o botão "Dúvida sobre tamanho?" chama uma consultora.</p></div></details>
       <details><summary>Posso trocar numa loja da minha cidade?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Se comprou na loja, sim: em até 30 dias, em qualquer uma das 142 lojas.</p></div></details>
-      <details><summary>E se eu comprei pelo site?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>A regra de troca das compras online está sendo confirmada. Antes de comprar, a consultora confirma para você.</p></div></details>
+      <details><summary>E se eu comprei pelo site?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>A regra de troca das compras online ainda está sendo confirmada pela Casa Lorenzi. Ela aparece aqui e em cada peça assim que for definida.</p></div></details>
       <details><summary>Tem moda masculina?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Tem. Casual e social, para ela e para ele.</p></div></details>
-      <details><summary>Como falo com uma consultora?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Pelo formulário no fim da página. Você escolhe se prefere WhatsApp, SMS ou e-mail.</p></div></details>
+      <details><summary>Preciso criar conta para comprar?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Não. Você compra só com e-mail, CPF e endereço de entrega, sem cadastro e sem falar com ninguém.</p></div></details>
+      <details><summary>Como falo com uma consultora?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Em qualquer peça ou na sacola, pelos botões "Dúvida sobre tamanho?", "Ajuda para montar o look?" e "Prefere comprar com ajuda?". É opcional: a compra não depende disso.</p></div></details>
     </div>
-  </div>
-</section>
-
-<section id="consultora" aria-labelledby="form-t">
-  <div class="wrap form-grid">
-    <div class="reveal">
-      <p class="sec-kicker r"><span class="dia" aria-hidden="true"></span>FALAR COM UMA CONSULTORA</p>
-      <h2 class="h-sec r" id="form-t">Conte a ocasião. A gente ajuda a escolher.</h2>
-    </div>
-    <form id="form" novalidate>
-      <div class="field full"><label for="f-nome">Nome</label><input id="f-nome" name="nome" type="text" autocomplete="given-name" placeholder="Como podemos te chamar" required></div>
-      <div class="field"><label for="f-ocasiao">Ocasião</label>
-        <select id="f-ocasiao" name="ocasiao" required>
-          <option value="" disabled selected>Escolha uma</option>
-          <option>Trabalho</option><option>Reunião e jantar</option><option>Evento de dia</option><option>Fim de semana</option><option>Outra</option>
-        </select>
-      </div>
-      <div class="field"><label for="f-contato">Seu contato</label><input id="f-contato" name="contato" type="text" autocomplete="tel" placeholder="Número ou e-mail" required></div>
-      <fieldset class="field full"><legend>Tamanho que costuma usar</legend>
-        <div class="chips">
-          <label><input type="radio" name="tamanho" value="PP"><span>PP</span></label>
-          <label><input type="radio" name="tamanho" value="P"><span>P</span></label>
-          <label><input type="radio" name="tamanho" value="M"><span>M</span></label>
-          <label><input type="radio" name="tamanho" value="G"><span>G</span></label>
-          <label><input type="radio" name="tamanho" value="GG"><span>GG</span></label>
-          <label><input type="radio" name="tamanho" value="Não sei"><span>Não sei</span></label>
-        </div>
-      </fieldset>
-      <fieldset class="field full"><legend>Como prefere conversar</legend>
-        <div class="chips">
-          <label><input type="radio" name="canal" value="WhatsApp" checked><span>WhatsApp</span></label>
-          <label><input type="radio" name="canal" value="SMS"><span>SMS</span></label>
-          <label><input type="radio" name="canal" value="e-mail"><span>E-mail</span></label>
-        </div>
-      </fieldset>
-      <button class="btn" type="submit">Pedir ajuda para escolher</button>
-      <p class="fine">Projeto de demonstração: o formulário não envia dados.</p>
-      <div class="success" role="status" aria-live="polite">
-        <div>
-          <svg viewBox="0 0 80 80" aria-hidden="true"><path pathLength="1" d="M40 6 74 40 40 74 6 40Z" fill="none" stroke="currentColor" stroke-width="2"/><path pathLength="1" d="M27 41l9 9 18-20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <h3 id="ok-t">Recebido.</h3>
-          <p id="ok-p">Este site é um projeto de demonstração e nada foi enviado.</p>
-        </div>
-      </div>
-    </form>
   </div>
 </section>
 
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="foot">
-      <div>
-        <div class="flogo"><svg class="lg" role="img" aria-label="Casa Lorenzi, 1989"><use href="#cl-logo"/></svg></div>
-        <p>Moda casual e social desde 1989.</p>
-      </div>
-      <div><h4>A casa</h4><ul><li><a href="#pecas">As peças</a></li><li><a href="#caimento">Caimento</a></li><li><a href="#atendimento">Atendimento</a></li></ul></div>
-      <div><h4>Lojas</h4><ul><li>142 lojas em 21 estados</li><li>138 em shoppings, 4 de rua</li><li><a href="#trocas">Trocas</a></li></ul></div>
-    </div>
-    <p class="disclaimer">Projeto conceitual de um case de estudo. Imagens geradas por IA. O formulário não envia dados.</p>
-  </div>
-</footer>
+<footer id="rodape"></footer>
 
+<script src="assets/catalogo.js"></script>
+<script src="assets/loja.js"></script>
+<script src="assets/p-home.js"></script>
 <script>
 (() => {
   'use strict';
@@ -927,37 +843,7 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
   const MQLS = GATES.map(q => matchMedia(q));
   MQLS.forEach(m => m.addEventListener('change', applyHeroMode));
 
-  /* ---------- navegação: escura sobre o filme, linho sobre a página ---------- */
-  const nav = document.getElementById('nav');
-  const main = document.getElementById('main');
-  let navSolid = null;
-  function navState() { const s = main.getBoundingClientRect().top < 80; if (s !== navSolid) { navSolid = s; nav.classList.toggle('solid', s); } }
-  addEventListener('scroll', navState, { passive: true }); navState();
-
-  /* ---------- menu do celular ---------- */
-  const menuBtn = document.getElementById('menubtn');
-  const menu = document.getElementById('menu');
-  let menuTimer = null;
-  function setMenu(open) {
-    clearTimeout(menuTimer);
-    menuBtn.setAttribute('aria-expanded', String(open));
-    menuBtn.querySelector('.sr-only').textContent = open ? 'Fechar o menu' : 'Abrir o menu';
-    document.documentElement.classList.toggle('menu-open', open);
-    if (open) {
-      menu.hidden = false;
-      requestAnimationFrame(() => requestAnimationFrame(() => menu.classList.add('on')));
-      menu.querySelector('a').focus({ preventScroll: true });
-    } else {
-      menu.classList.remove('on');
-      menuTimer = setTimeout(() => { menu.hidden = true; }, reduceMQ.matches ? 0 : 450);
-    }
-  }
-  menuBtn.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
-  addEventListener('keydown', e => { if (e.key === 'Escape' && menuBtn.getAttribute('aria-expanded') === 'true') { setMenu(false); menuBtn.focus(); } });
-  matchMedia('(min-width: 1061px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
-
-  /* ---------- pontos do carrossel das peças ---------- */
+  /* ---------- pontos do carrossel dos looks ---------- */
   const looksEl = document.querySelector('.looks');
   const dots = [...document.querySelectorAll('.swipe .dots i')];
   let dotIdx = 0, dotRaf = null;
@@ -1074,27 +960,6 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
   stateBtns.forEach(b => b.addEventListener('click', () => { setFit(Number(b.dataset.v)); lightFacts(); }));
   new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { setTimeout(lightFacts, 2600); o.disconnect(); } }, { threshold: 0.6 }).observe(document.getElementById('facts'));
   paintFit(shownF);
-
-  /* ---------- ocasião já marcada no formulário ---------- */
-  const occSel = document.getElementById('f-ocasiao');
-  document.querySelectorAll('[data-ocasiao]').forEach(a => a.addEventListener('click', () => { occSel.value = a.dataset.ocasiao; }));
-
-  /* ---------- formulário (demonstração) ---------- */
-  const form = document.getElementById('form');
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const bad = [...form.querySelectorAll('[required]')].find(i => !i.checkValidity());
-    if (bad) { bad.reportValidity(); bad.focus(); return; }
-    const nome = form.nome.value.trim().split(/\s+/)[0];
-    const canal = (form.querySelector('input[name="canal"]:checked') || {}).value || 'WhatsApp';
-    document.getElementById('ok-t').textContent = 'Recebido, ' + nome + '.';
-    document.getElementById('ok-p').textContent = 'Este site é um projeto de demonstração e nada foi enviado. No site real, uma consultora responderia por ' + canal + '.';
-    form.classList.add('sent');
-    form.querySelectorAll('input,select,button').forEach(i => { i.tabIndex = -1; });
-    const ok = form.querySelector('.success');
-    ok.setAttribute('tabindex', '-1');
-    ok.focus({ preventScroll: true });
-  });
 
   /* ---------- pausa em aba escondida ---------- */
   document.addEventListener('visibilitychange', () => document.body.classList.toggle('paused', document.hidden));

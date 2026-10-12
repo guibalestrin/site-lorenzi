@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peças · Casa Lorenzi</title>
+<meta name="description" content="Peças da Casa Lorenzi com filtros por categoria, tamanho, cor, tecido, modelagem e preço.">
+<meta name="theme-color" content="#efe8dc">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316120f'/%3E%3Cpath fill-rule='evenodd' d='M32 10 54 32 32 54 10 32Z M32 20 20 32 32 44 44 32Z' fill='%23efe8dc'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://d2ol7oe51mr4n9.cloudfront.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/loja.css">
+<link rel="stylesheet" href="assets/paginas.css">
+</head>
+<body class="loja" data-pagina="loja">
+<main id="principal" tabindex="-1">
+<div class="wrap">
+  <ol class="migalha" id="migalha"><li><a href="index.html">Início</a></li><li aria-current="page">Peças</li></ol>
+  <div class="lista-topo">
+    <div><h1 class="h1" id="titulo">Todas as peças</h1><p class="lede" id="sub"></p></div>
+  </div>
+  <div class="aviso-demo" role="note" style="margin:18px 0 6px"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 9v5M10 6.2v.1" stroke-linecap="round"/></svg><span>Catálogo de demonstração: preços, tamanhos disponíveis e composição são exemplos. <a href="ajuda.html#demo">Saiba mais</a></span></div>
+  <div class="lista">
+    <aside class="filtros" id="filtros" aria-label="Filtros">
+      <div class="filtros-cab"><h2>Filtrar</h2><button class="fechar" type="button" id="fechar-filtros" aria-label="Fechar filtros"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3l10 10M13 3 3 13" stroke-linecap="round"/></svg></button></div>
+      <form id="form-filtros"></form>
+      <div class="filtros-pe"><button class="btn sec" type="button" id="limpar">Limpar</button><button class="btn" type="button" id="ver-resultado">Ver peças</button></div>
+    </aside>
+    <div class="resultados">
+      <div class="barra">
+        <button class="btn sec abrir-filtros" type="button" id="abrir-filtros" aria-controls="filtros" aria-expanded="false">Filtrar <span id="n-filtros"></span></button>
+        <p class="contagem" id="contagem" aria-live="polite"></p>
+        <label class="ordem"><span>Ordenar</span><select id="ordem"><option value="relevancia">Relevância</option><option value="novidades">Novidades</option><option value="menor">Menor preço</option><option value="maior">Maior preço</option></select></label>
+      </div>
+      <div class="ativos" id="ativos"></div>
+      <div class="grade" id="grade"></div>
+      <div class="vazio-lista" id="vazio" hidden>
+        <h2 class="h2">Nenhuma peça com esses filtros.</h2>
+        <p class="lede">Tire um filtro ou peça ajuda para encontrar o que você procura.</p>
+        <div class="acoes-linha"><button class="btn" type="button" id="limpar2">Limpar filtros</button><button class="link-ajuda" type="button" data-ajuda="escolher">Preciso de ajuda para escolher</button></div>
+      </div>
+      <div class="ajuda-faixa"><p><strong>Não achou o que procura?</strong> Uma consultora sugere peças pela ocasião e pelo seu tamanho.</p><button class="link-ajuda" type="button" data-ajuda="escolher">Preciso de ajuda para escolher</button></div>
+    </div>
+  </div>
+</div>
+</main>
+<footer id="rodape"></footer>
+<script src="assets/catalogo.js"></script>
+<script src="assets/loja.js"></script>
+<script src="assets/p-loja.js"></script>
+</body>
+</html>
