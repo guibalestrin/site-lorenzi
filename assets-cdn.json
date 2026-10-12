@@ -1,0 +1,10 @@
+{
+  "_nota": "Arquivos de mídia do site, hospedados no armazenamento do Higgsfield (CORS liberado). A página aponta direto para estes endereços; os brutos e as imagens-chave ficam fora do repositório.",
+  "hero-scrub.mp4": "https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/8bb4effa-d26b-43cb-9d9a-c2f6def60264.mp4",
+  "hero-poster.jpg": "https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/159bc209-f7de-41f3-bd82-7276e67e7327.jpg",
+  "hero-ending.jpg": "https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/84517e53-4984-4ad4-9ccf-990e24b7b88d.jpg",
+  "peca-trabalho.jpg": "https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/c0bf5203-9c10-4151-aeb1-fa2d86dfd695.jpg",
+  "peca-jantar.jpg": "https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/cc0b3ff8-3877-4639-bde5-0ce3a97c123b.jpg",
+  "peca-dia.jpg": "https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/452c4fa4-0c5a-4572-be2f-1b0b9580c80b.jpg",
+  "peca-fimdesemana.jpg": "https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/fcf8e7f1-1e83-43f7-ad9c-c62daeb3ae40.jpg"
+}

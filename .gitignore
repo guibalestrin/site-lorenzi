@@ -1,0 +1,5 @@
+review/
+hostgator.env
+*.raw.mp4
+.vercel
+node_modules/
