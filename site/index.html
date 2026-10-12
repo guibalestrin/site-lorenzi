@@ -83,9 +83,30 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
 .btn.ghost:hover{background:rgba(239,232,220,.1)}
 .nav .btn{padding:10px 18px;font-size:14px}
 .nav:not(.solid) .btn{background:var(--canvas);border-color:var(--canvas);color:var(--ink)}
-@media (max-width:1060px){.nav ul{display:none}.nav .btn{margin-left:auto}}
+.menubtn{display:none;position:relative;width:44px;height:44px;border:1px solid currentColor;border-radius:50%;background:transparent;color:inherit;cursor:pointer;flex:none}
+.menubtn i{position:absolute;left:13px;right:13px;height:1.5px;background:currentColor;transition:transform .45s var(--ease-out),top .45s var(--ease-out)}
+.menubtn i:first-of-type{top:17px}.menubtn i:last-of-type{top:25px}
+.menu-open .menubtn i:first-of-type{top:21px;transform:rotate(45deg)}
+.menu-open .menubtn i:last-of-type{top:21px;transform:rotate(-45deg)}
+.menu{position:fixed;inset:0;z-index:45;background:var(--canvas);padding:96px 24px 36px;display:flex;flex-direction:column;gap:26px;overflow-y:auto;opacity:0;transform:translateY(-12px);transition:opacity .45s var(--ease-out),transform .45s var(--ease-out)}
+.menu[hidden]{display:none}
+.menu.on{opacity:1;transform:none}
+.menu ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.menu li a{display:flex;align-items:center;min-height:58px;border-bottom:1px solid var(--line);font-family:var(--display);font-weight:500;font-size:30px;text-decoration:none;color:var(--text-primary)}
+.menu .btn{align-self:stretch;padding:16px 22px;font-size:17px}
+.menu p{margin:0;font-size:13px;color:var(--text-secondary);letter-spacing:.08em}
+.menu-open .nav{color:var(--text-primary);background:rgba(239,232,220,.96);border-bottom:1px solid var(--line)}
+.menu-open .nav .logo,.menu-open .nav ul a{filter:none;text-shadow:none}
+html.menu-open{overflow:hidden}
+@media (max-width:1060px){.nav ul{display:none}.nav .navcta{margin-left:auto}.menubtn{display:block}}
+@media (max-width:540px){.nav .navcta{display:none}.menubtn{margin-left:auto}}
 @media (max-width:420px){.nav .logo{width:118px}.nav .btn{padding:9px 14px;font-size:13px}}
-@media (pointer:coarse){.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}}
+@media (pointer:coarse){.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  .nav .logo{padding:11px 0;margin:-11px 0}
+  .look a{min-height:44px;margin-top:2px}
+  .foot ul a{display:inline-flex;align-items:center;min-height:44px}
+  .foot ul{line-height:1.6}
+  .textlink{min-height:44px}}
 
 /* hero */
 .hero{position:relative;height:1000vh;background:var(--ink)}
@@ -139,14 +160,16 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
 /* celular e tablet em pé: o mesmo filme numa janela no alto, as frases embaixo */
 @media (max-width:720px),(orientation:portrait) and (max-width:1024px),(orientation:portrait) and (pointer:coarse){
   .hero{height:700vh}
-  .stage .poster,.stage video{inset:auto 0;top:64px;width:100%;height:min(75vw,46svh);object-position:58% 50%;background-position:58% 50%;-webkit-mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent);mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent)}
+  .stage .poster,.stage video{inset:auto 0;top:64px;width:100%;height:min(75vw,42svh);object-position:58% 50%;background-position:58% 50%;-webkit-mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent);mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent)}
   .scrim,.band::before,.progress{display:none}
-  .band,.band.left,.band.right,.band.first,.band.center,.band.settle{left:20px;right:20px;width:auto;top:calc(64px + min(75vw,46svh) + 22px);transform:none;text-align:left}
+  .band,.band.left,.band.right,.band.first,.band.center,.band.settle{left:20px;right:20px;width:auto;top:calc(64px + min(75vw,42svh) + 22px);transform:none;text-align:left}
   .band h1,.band h2,.settle h2{font-size:clamp(28px,8vw,44px);max-width:none;margin-inline:0}
   .band .sub{font-size:16px;margin-top:12px}
   .band.right .sub{margin-left:0;max-width:none}
-  .fx-rise .seal{width:min(280px,70vw);margin:0 0 18px}
-  .fx-rise .row{justify-content:flex-start;margin-top:20px}
+  .fx-rise .seal{width:min(260px,66vw);margin:0 0 14px}
+  .settle h2{font-size:clamp(23px,6.4vw,34px)}
+  .fx-rise .row{justify-content:flex-start;margin-top:18px;gap:10px}
+  .fx-rise .row .btn{padding:12px 18px;font-size:15px}
   .cue{bottom:14px}
 }
 
@@ -212,9 +235,17 @@ section{position:relative;scroll-margin-top:76px}
 .look a::after{content:"";width:18px;height:1.5px;background:currentColor;transition:width .4s var(--ease-out)}
 .look a:hover::after{width:28px}
 
+.swipe{display:none;align-items:center;gap:14px;margin-top:14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--text-secondary)}
+.swipe .dots{display:flex;gap:6px}
+.swipe .dots i{width:7px;height:7px;border:1.5px solid var(--detail);transform:rotate(45deg);transition:background .35s var(--ease-out)}
+.swipe .dots i.on{background:var(--detail)}
+
 /* B. caimento: o momento interativo */
 #caimento{padding:clamp(80px,10vw,140px) 0;background:var(--panel)}
-.fit{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,90px);align-items:center}
+.fit{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"text fig" "ctl fig";column-gap:clamp(40px,6vw,90px);row-gap:0;align-items:center}
+.fittext{grid-area:text;align-self:end}
+.fitctl{grid-area:ctl;align-self:start}
+.fit .figure{grid-area:fig}
 .figure{position:relative;aspect-ratio:1/1.05;max-width:520px;width:100%;justify-self:center;background:var(--panel-2);border:1px solid var(--line);border-radius:22px;overflow:hidden}
 .figure svg{position:absolute;inset:0;width:100%;height:100%}
 .figure .body{fill:none;stroke:rgba(29,25,21,.28);stroke-width:2;stroke-dasharray:5 6}
@@ -223,7 +254,7 @@ section{position:relative;scroll-margin-top:76px}
 .figure .ease{stroke:var(--detail);stroke-width:1.5}
 .figure .readout{position:absolute;left:18px;right:18px;bottom:16px;display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:13px;color:var(--text-secondary)}
 .figure .readout b{font-family:var(--display);font-weight:500;font-size:clamp(26px,2.4vw,34px);color:var(--text-primary)}
-.fitctl{margin-top:34px}
+.fitctl>div{margin-top:34px}
 .fitctl label{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:12px}
 .range{-webkit-appearance:none;appearance:none;width:100%;height:56px;background:transparent;cursor:grab;touch-action:pan-y}
 .range:active{cursor:grabbing}
@@ -277,8 +308,9 @@ section{position:relative;scroll-margin-top:76px}
 .lojas h2{font-family:var(--display);font-weight:500;font-size:clamp(32px,3.6vw,52px);line-height:1.08;margin:0}
 .lojas p{margin:16px 0 0;color:var(--text-secondary);max-width:44ch}
 .storetape{margin-top:clamp(50px,6vw,76px);width:100%;height:auto;display:block;overflow:visible}
-.storetape line{stroke:var(--text-primary);stroke-width:1.2;opacity:clamp(0,(var(--draw,0) - var(--t,0))*14,1)}
+.storetape line{stroke:var(--text-primary);stroke-width:1.2;vector-effect:non-scaling-stroke;opacity:clamp(0,(var(--draw,0) - var(--t,0))*14,1)}
 .storetape line.rua{stroke:var(--detail);stroke-width:3}
+@media (max-width:720px){.storetape line{stroke-width:1.4}.storetape line.rua{stroke-width:3.5}}
 .tapelegend{display:flex;gap:26px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:13px;color:var(--text-secondary)}
 .tapelegend i{display:inline-block;width:2px;height:14px;background:var(--text-primary);vertical-align:-2px;margin-right:8px}
 .tapelegend i.rua{width:3px;background:var(--detail)}
@@ -361,12 +393,26 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
 @media (max-width:1040px){
   .looks{grid-template-columns:1fr 1fr}
   .oc-head,.at-head,.fit,.faq-grid,.form-grid,.halves{grid-template-columns:1fr}
+  .fit{grid-template-areas:"text" "fig" "ctl"}
+  .fit .figure{max-width:440px;margin-top:30px}
   .oc-head .note{justify-self:start}
   .lojas{grid-template-columns:1fr;align-items:start}
 }
 @media (max-width:720px){
   body{font-size:17px}
-  .looks{grid-template-columns:1fr}
+  /* as peças viram um carrossel de deslizar */
+  .looks{display:flex;grid-template-columns:none;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;margin:0 -16px;padding:4px 16px 10px;scroll-padding-inline:16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .looks::-webkit-scrollbar{display:none}
+  .look{flex:0 0 80%;scroll-snap-align:start}
+  .look:hover{transform:none}
+  .swipe{display:flex}
+  .oc-head{margin-bottom:30px}
+  .spiral{right:-40vw;top:-10vw;width:110vw}
+  /* caimento: figura compacta logo acima da fita */
+  .fit .figure{aspect-ratio:1/.82;max-width:none;margin-top:26px}
+  .figure .readout{bottom:10px}
+  .fitctl>div{margin-top:22px}
+  .state-say{min-height:0}
   .facts,.timeline{grid-template-columns:1fr}
   .timeline::before{left:27px;right:auto;top:28px;bottom:28px;border-top:0;border-left:2px dashed rgba(239,232,220,.34);transform-origin:top;transform:scaleY(var(--draw,0))}
   .timeline li{display:grid;grid-template-columns:56px 1fr;gap:0 18px}
@@ -409,8 +455,21 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
     <li><a href="#trocas">Trocas</a></li>
     <li><a href="#perguntas">Perguntas</a></li>
   </ul>
-  <a class="btn" href="#consultora">Falar com uma consultora</a>
+  <a class="btn navcta" href="#consultora">Falar com uma consultora</a>
+  <button class="menubtn" id="menubtn" type="button" aria-expanded="false" aria-controls="menu"><span class="sr-only">Abrir o menu</span><i aria-hidden="true"></i><i aria-hidden="true"></i></button>
 </nav>
+<div class="menu" id="menu" hidden>
+  <ul>
+    <li><a href="#pecas">As peças</a></li>
+    <li><a href="#caimento">Caimento</a></li>
+    <li><a href="#atendimento">Atendimento</a></li>
+    <li><a href="#lojas">Lojas</a></li>
+    <li><a href="#trocas">Trocas</a></li>
+    <li><a href="#perguntas">Perguntas</a></li>
+  </ul>
+  <a class="btn" href="#consultora">Falar com uma consultora</a>
+  <p class="mono">142 lojas em 21 estados</p>
+</div>
 
 <header class="hero" id="top">
   <div class="stage" id="stage">
@@ -488,6 +547,7 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
         <div class="txt"><h3>Fim de semana</h3><p>Linho, malha e jeans. Casual, mas escolhido.</p><a href="#consultora" data-ocasiao="Fim de semana">Pedir sugestão para esta ocasião</a></div>
       </article>
     </div>
+    <div class="swipe" aria-hidden="true"><span class="dots"><i class="on"></i><i></i><i></i><i></i></span><span>Deslize para ver as quatro ocasiões</span></div>
   </div>
 </section>
 
@@ -496,11 +556,12 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
 <section id="caimento" aria-labelledby="fit-t">
   <div class="wrap">
     <div class="fit">
-      <div class="reveal">
+      <div class="fittext reveal">
         <p class="sec-kicker r"><span class="dia" aria-hidden="true"></span>CAIMENTO</p>
         <h2 class="h-sec r" id="fit-t">Entenda o caimento antes de provar.</h2>
         <p class="lede r">O que a vendedora explicaria no provador, aqui na tela: a folga da peça, o tecido e as medidas em centímetros.</p>
-        <div class="fitctl r">
+      </div>
+      <div class="fitctl reveal"><div class="r">
           <label for="folga">Estique a fita: folga do blazer no busto</label>
           <input class="range" id="folga" type="range" min="0" max="16" step="0.5" value="8" aria-valuetext="8 centímetros de folga, no corpo">
           <div class="scale mono" aria-hidden="true"><span>0 cm</span><span>8 cm</span><span>16 cm</span></div>
@@ -511,8 +572,7 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
           </div>
           <p class="state-say" id="say" aria-live="polite"><b>No corpo.</b> Folga moderada. Acompanha sem apertar.</p>
           <p class="example">Valores de exemplo, para explicar a ideia. Cada peça tem as próprias medidas.</p>
-        </div>
-      </div>
+      </div></div>
       <div class="figure" id="figure" aria-hidden="true">
         <svg viewBox="0 0 400 420">
           <path class="body" d="M152 70c0-16 21-26 48-26s48 10 48 26v20c26 4 50 14 58 30l10 70c2 16-4 30-8 44l-6 150H98l-6-150c-4-14-10-28-8-44l10-70c8-16 32-26 58-30z"/>
@@ -874,6 +934,45 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
   function navState() { const s = main.getBoundingClientRect().top < 80; if (s !== navSolid) { navSolid = s; nav.classList.toggle('solid', s); } }
   addEventListener('scroll', navState, { passive: true }); navState();
 
+  /* ---------- menu do celular ---------- */
+  const menuBtn = document.getElementById('menubtn');
+  const menu = document.getElementById('menu');
+  let menuTimer = null;
+  function setMenu(open) {
+    clearTimeout(menuTimer);
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.querySelector('.sr-only').textContent = open ? 'Fechar o menu' : 'Abrir o menu';
+    document.documentElement.classList.toggle('menu-open', open);
+    if (open) {
+      menu.hidden = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => menu.classList.add('on')));
+      menu.querySelector('a').focus({ preventScroll: true });
+    } else {
+      menu.classList.remove('on');
+      menuTimer = setTimeout(() => { menu.hidden = true; }, reduceMQ.matches ? 0 : 450);
+    }
+  }
+  menuBtn.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && menuBtn.getAttribute('aria-expanded') === 'true') { setMenu(false); menuBtn.focus(); } });
+  matchMedia('(min-width: 1061px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
+
+  /* ---------- pontos do carrossel das peças ---------- */
+  const looksEl = document.querySelector('.looks');
+  const dots = [...document.querySelectorAll('.swipe .dots i')];
+  let dotIdx = 0, dotRaf = null;
+  looksEl.addEventListener('scroll', () => {
+    if (dotRaf !== null) return;
+    dotRaf = requestAnimationFrame(() => {
+      dotRaf = null;
+      const cards = looksEl.children, x = looksEl.scrollLeft;
+      let best = 0;
+      for (let i = 0; i < cards.length; i++) if (Math.abs(cards[i].offsetLeft - looksEl.offsetLeft - 16 - x) < Math.abs(cards[best].offsetLeft - looksEl.offsetLeft - 16 - x)) best = i;
+      if (looksEl.scrollLeft + looksEl.clientWidth >= looksEl.scrollWidth - 4) best = cards.length - 1;
+      if (best !== dotIdx) { dots[dotIdx].classList.remove('on'); dots[best].classList.add('on'); dotIdx = best; }
+    });
+  }, { passive: true });
+
   /* ---------- entradas ---------- */
   const revIO = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
@@ -886,12 +985,24 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
   const tapeSvg = document.getElementById('storetape');
   const NS = 'http://www.w3.org/2000/svg';
   const ruaAt = new Set([17, 58, 96, 131]);   // as 4 lojas de rua, espalhadas pela fita
-  let tapeMarkup = '<line x1="0" y1="0" x2="1420" y2="0" style="--t:0"/>';
-  for (let i = 0; i < 142; i++) {
-    const x = 5 + i * 10, tall = i % 10 === 0 ? 34 : (i % 5 === 0 ? 24 : 16);
-    tapeMarkup += '<line' + (ruaAt.has(i) ? ' class="rua"' : '') + ' x1="' + x + '" y1="0" x2="' + x + '" y2="' + (ruaAt.has(i) ? 44 : tall) + '" style="--t:' + (i / 142 * 0.8).toFixed(3) + '"/>';
+  // no computador, uma fita só com as 142 marcações; no celular, duas fitas de 71, para cada marca continuar visível
+  const narrowMQ = matchMedia('(max-width: 720px)');
+  function buildTape() {
+    const per = narrowMQ.matches ? 71 : 142, rows = 142 / per, w = per * 10, rowH = 70;
+    let m = '';
+    for (let r = 0; r < rows; r++) {
+      const y0 = r * rowH;
+      m += '<line x1="0" y1="' + y0 + '" x2="' + w + '" y2="' + y0 + '" style="--t:0"/>';
+      for (let j = 0; j < per; j++) {
+        const i = r * per + j, x = 5 + j * 10, tall = i % 10 === 0 ? 34 : (i % 5 === 0 ? 24 : 16);
+        m += '<line' + (ruaAt.has(i) ? ' class="rua"' : '') + ' x1="' + x + '" y1="' + y0 + '" x2="' + x + '" y2="' + (y0 + (ruaAt.has(i) ? 44 : tall)) + '" style="--t:' + (i / 142 * 0.8).toFixed(3) + '"/>';
+      }
+    }
+    tapeSvg.setAttribute('viewBox', '0 0 ' + w + ' ' + (rows * rowH - 10));
+    tapeSvg.innerHTML = m;
   }
-  tapeSvg.innerHTML = tapeMarkup;
+  buildTape();
+  narrowMQ.addEventListener('change', buildTape);
 
   /* ---------- linhas que se traçam no scroll ---------- */
   const drawEls = [...document.querySelectorAll('.tape'), document.getElementById('timeline'), tapeSvg];
