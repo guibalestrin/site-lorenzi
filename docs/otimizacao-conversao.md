@@ -29,6 +29,7 @@ Como o site é de teste, avaliações, promoções, lojas e condições comercia
 | Parcelamento "ou até 6x de R$ X sem juros" | Cards, peça, sacola e checkout (com escolha de parcelas) | Reduz a barreira do preço cheio |
 | "Combine com esta peça" | Página da peça, depois de "Complete o look", com o mesmo grid de cards | Peças complementares (camisa → calça e cinto) |
 | "Combina com a sua sacola" | Abaixo da sacola | Adicionar uma peça antes de finalizar |
+| Order bump: "Oferta para completar o look", com caixa "Sim, quero adicionar" | Na sacola, logo acima de "Finalizar compra". Mostra uma peça complementar do mesmo gênero que ainda não está na sacola, com o tamanho sugerido a partir das peças escolhidas. Um clique adiciona a peça, desmarcar tira. O preço especial só vale junto com outra peça, e o item fica com 1 unidade e a etiqueta "Oferta da sacola" | Ticket médio no momento de maior intenção, sem pop-up nem etapa extra |
 | Barra de frete grátis ("Faltam R$ 45 para o frete grátis") | Topo do resumo da sacola | Benefício progressivo configurado (`freteGratisAcima`) |
 | Ordenação "Mais bem avaliadas" | Listagem | Encontrar as peças mais seguras |
 
@@ -46,13 +47,14 @@ Não foram usados pop-ups, contadores, cores de alerta nem selos de certificador
 
 ## Medição
 
-Novos eventos no `dataLayer`, também mostrados no painel `metricas.html`: `add_to_wishlist`, `remove_from_wishlist`, `back_in_stock_request`, `newsletter_signup`, `review_filter`, `store_availability_check` e `assist_open` com o motivo `consultora`.
+Novos eventos no `dataLayer`, também mostrados no painel `metricas.html`: `order_bump_view`, `order_bump_add` e `order_bump_remove` (com a taxa de aceite do order bump no painel), `add_to_wishlist`, `remove_from_wishlist`, `back_in_stock_request`, `newsletter_signup`, `review_filter`, `store_availability_check` e `assist_open` com o motivo `consultora`.
 
 ## O que trocar pelos dados reais
 
 | Dado simulado | Fonte real |
 |---|---|
 | Avaliações e fotos de clientes (recortes das fotos do site) | Plataforma de avaliações com compra verificada e moderação |
+| Ofertas do order bump (`comercial.orderBump`: peça, preço especial e texto) | Regra comercial da Casa Lorenzi, idealmente com margem definida por peça |
 | Promoções (`precoDe`) | Tabela de preços e promoções da plataforma |
 | Parcelamento (6x, parcela mínima R$ 80) | Regras do gateway e da Casa Lorenzi |
 | Frete grátis acima de R$ 599 e retirada em 2 dias | Política comercial e logística |

@@ -18,7 +18,7 @@
 
   /* ---------- resumo ---------- */
   const resumo = document.getElementById('resumo-itens');
-  resumo.innerHTML = itens.map(i => { const p = C.produto(i.id); return '<li><img src="' + C.foto(p.fotos[0]) + '" alt=""><span>' + esc(p.nome) + '<small>Tamanho ' + i.tamanho + ' · ' + i.qtd + (i.qtd === 1 ? ' unidade' : ' unidades') + '</small></span><b>' + brl(p.preco * i.qtd) + '</b></li>'; }).join('');
+  resumo.innerHTML = itens.map(i => { const p = C.produto(i.id); const pu = sacola.precoItem(i, itens); return '<li><img src="' + C.foto(p.fotos[0]) + '" alt=""><span>' + esc(p.nome) + (i.bump && pu < p.preco ? ' <span class="tag-bump">oferta</span>' : '') + '<small>Tamanho ' + i.tamanho + ' · ' + i.qtd + (i.qtd === 1 ? ' unidade' : ' unidades') + '</small></span><b>' + brl(pu * i.qtd) + '</b></li>'; }).join('');
   function total() { return subtotal + (freteEscolhido ? freteEscolhido.valor : 0); }
   function atualizaTotais() {
     document.getElementById('r-sub').textContent = brl(subtotal);

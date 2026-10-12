@@ -3,6 +3,36 @@
   'use strict';
   const { C, esc, brl, sacola, frete, valorFrete, chegaAte, parcelas, card, vistos, favoritos, le, guarda, track } = window.CL;
   const COM = C.comercial;
+  let bumpVisto = '';
+  // tamanho sugerido para a oferta: o mesmo das peças da sacola, ajustado aos tamanhos da peça
+  function tamanhoSugerido(p, itens) {
+    const ordem = ['PP', 'P', 'M', 'G', 'GG'];
+    const ref = itens.filter(i => !i.bump && C.produto(i.id).genero === p.genero).map(i => i.tamanho)[0];
+    if (!ref) return '';
+    const disp = p.tamanhos.filter((t, k) => p.estoque[k] > 0);
+    return disp.slice().sort((a, b) => Math.abs(ordem.indexOf(a) - ordem.indexOf(ref)) - Math.abs(ordem.indexOf(b) - ordem.indexOf(ref)))[0] || '';
+  }
+  function bumpHTML(itens) {
+    const o = sacola.ofertaBump();
+    if (!o) return '';
+    const p = C.produto(o.id);
+    const atual = itens.find(i => i.bump);
+    const valido = sacola.bumpValido(itens);
+    const tam = atual ? atual.tamanho : tamanhoSugerido(p, itens);
+    const off = Math.round((1 - o.preco / p.preco) * 100);
+    if (bumpVisto !== o.id) { bumpVisto = o.id; track('order_bump_view', { item_id: o.id, valor: o.preco }); }
+    return '<div class="bump' + (atual ? ' on' : '') + '" id="bump">' +
+      '<p class="bump-kicker">Oferta para completar o look</p>' +
+      '<div class="bump-peca"><a href="produto.html?id=' + p.id + '" class="bump-foto"><img src="' + C.foto(p.fotos[0]) + '" alt=""></a><div>' +
+        '<strong>' + esc(p.nome) + '</strong><p class="bump-txt">' + esc(o.texto) + '</p>' +
+        '<p class="preco"><s><span class="sr-only">De </span>' + brl(p.preco) + '</s> <span class="sr-only">por </span>' + brl(o.preco) + ' <span class="desconto">-' + off + '%</span></p>' +
+        '<label class="bump-tam"><span>Tamanho</span><select id="bump-tam" aria-describedby="bump-erro"><option value="">Escolha</option>' + p.tamanhos.map((t, k) => '<option value="' + t + '"' + (t === tam ? ' selected' : '') + (p.estoque[k] ? '' : ' disabled') + '>' + t + (p.estoque[k] ? '' : ' (indisponível)') + '</option>').join('') + '</select></label>' +
+      '</div></div>' +
+      '<label class="bump-check"><input type="checkbox" id="bump-ok"' + (atual ? ' checked' : '') + '><span><b>Sim, quero adicionar por ' + brl(o.preco) + '</b>' + (valido ? '' : '<small>A oferta vale junto com outra peça da sacola.</small>') + '</span></label>' +
+      '<p class="erro-campo" id="bump-erro" hidden>Escolha o tamanho para adicionar.</p>' +
+      '<p class="bump-nota">Preço especial só nesta compra. Você pode tirar a qualquer momento.</p>' +
+    '</div>';
+  }
   const PAGAMENTOS = '<ul class="pagamentos" aria-label="Formas de pagamento aceitas"><li>Visa</li><li>Mastercard</li><li>Elo</li><li>Amex</li><li>Pix</li></ul>';
   const raiz = document.getElementById('sacola');
 
@@ -29,18 +59,19 @@
       '<div class="sacola-grid">' +
         '<ul class="itens" aria-label="Peças na sacola">' + itens.map((i, n) => {
           const p = C.produto(i.id);
-          return '<li class="item" data-n="' + n + '">' +
+          const pu = sacola.precoItem(i, itens);
+          return '<li class="item' + (i.bump ? ' item-bump' : '') + '" data-n="' + n + '">' +
             '<a href="produto.html?id=' + p.id + '" class="item-foto"><img src="' + C.foto(p.fotos[0]) + '" alt=""></a>' +
             '<div class="item-txt">' +
               '<h2><a href="produto.html?id=' + p.id + '">' + esc(p.nome) + '</a></h2>' +
               '<p class="meta"><span class="cor-ponto" style="background:' + p.cor.hex + '"></span>' + esc(p.cor.nome) + ' · ref. ' + p.ref + '</p>' +
               '<div class="item-ctl">' +
                 '<label><span class="sr-only">Tamanho de ' + esc(p.nome) + '</span><select data-acao="tam">' + p.tamanhos.map((t, k) => '<option value="' + t + '"' + (t === i.tamanho ? ' selected' : '') + (p.estoque[k] ? '' : ' disabled') + '>Tamanho ' + t + (p.estoque[k] ? '' : ' (indisponível)') + '</option>').join('') + '</select></label>' +
-                '<div class="qtd" role="group" aria-label="Quantidade de ' + esc(p.nome) + '"><button type="button" data-acao="menos" aria-label="Diminuir"' + (i.qtd <= 1 ? ' disabled' : '') + '>−</button><output aria-live="polite">' + i.qtd + '</output><button type="button" data-acao="mais" aria-label="Aumentar"' + (i.qtd >= 10 ? ' disabled' : '') + '>+</button></div>' +
+                (i.bump ? '<span class="tag-bump">Oferta da sacola · 1 unidade</span>' : '<div class="qtd" role="group" aria-label="Quantidade de ' + esc(p.nome) + '"><button type="button" data-acao="menos" aria-label="Diminuir"' + (i.qtd <= 1 ? ' disabled' : '') + '>−</button><output aria-live="polite">' + i.qtd + '</output><button type="button" data-acao="mais" aria-label="Aumentar"' + (i.qtd >= 10 ? ' disabled' : '') + '>+</button></div>') +
                 '<button type="button" class="remover" data-acao="remover">Remover</button>' +
               '</div>' +
             '</div>' +
-            '<p class="item-preco">' + brl(p.preco * i.qtd) + (i.qtd > 1 ? '<small>' + brl(p.preco) + ' cada</small>' : '') + '</p>' +
+            '<p class="item-preco">' + brl(pu * i.qtd) + (pu < p.preco ? '<small><s>' + brl(p.preco) + '</s></small>' : '') + (i.qtd > 1 ? '<small>' + brl(pu) + ' cada</small>' : '') + '</p>' +
           '</li>';
         }).join('') + '</ul>' +
         '<aside class="resumo" aria-labelledby="res-t">' +
@@ -53,6 +84,7 @@
           (freteSel ? '<p class="prazo-est">' + (freteSel.id === 'retirada' ? 'Pronto para retirar' : 'Chega') + ' até <b>' + chegaAte(freteSel.prazo) + '</b>.</p>' : '') +
           '<form id="form-cep" class="cx-in" novalidate><label class="sr-only" for="cep">CEP</label><input id="cep" inputmode="numeric" autocomplete="postal-code" placeholder="CEP" maxlength="9" value="' + esc(cep) + '"><button class="btn sec" type="submit">Calcular</button></form>' +
           (ops ? '<fieldset class="fretes-opc"><legend class="sr-only">Opções de entrega</legend>' + ops.map(o => '<label class="opc-frete"><input type="radio" name="frete" value="' + o.id + '"' + (freteSel && freteSel.id === o.id ? ' checked' : '') + '><span><b>' + esc(o.nome) + '</b><small>' + (o.id === 'retirada' ? 'pronto' : 'chega') + ' até ' + chegaAte(o.prazo) + '</small></span><b>' + valorFrete(o) + '</b></label>').join('') + '</fieldset>' : '') +
+          bumpHTML(itens) +
           '<a class="btn grande largo" href="checkout.html" id="finalizar">Finalizar compra</a>' +
           '<p class="sem-cadastro">Sem cadastro: só e-mail, CPF e endereço.</p>' + PAGAMENTOS +
           '<a class="btn sec largo" href="loja.html">Continuar comprando</a>' +
@@ -79,6 +111,23 @@
       const n = Number(e.target.closest('.item').dataset.n);
       sacola.alterar(n, { tamanho: e.target.value });
       desenha();
+    }
+    if (e.target.id === 'bump-ok' || e.target.id === 'bump-tam') {
+      const o = sacola.ofertaBump();
+      const tam = document.getElementById('bump-tam').value;
+      const marcado = document.getElementById('bump-ok').checked;
+      if (marcado && !tam) {
+        document.getElementById('bump-erro').hidden = false;
+        document.getElementById('bump-tam').setAttribute('aria-invalid', 'true');
+        if (e.target.id === 'bump-ok') { e.target.checked = false; document.getElementById('bump-tam').focus(); }
+        return;
+      }
+      if (marcado) sacola.adicionarBump(o.id, tam);
+      else if (e.target.id === 'bump-ok') sacola.removerBump();
+      else return;
+      desenha();
+      const alvo = document.getElementById(e.target.id); alvo && alvo.focus();
+      return;
     }
     if (e.target.name === 'frete') { guarda('cl_frete', e.target.value); desenha(); const r = raiz.querySelector('input[name=frete]:checked'); r && r.focus(); }
   });

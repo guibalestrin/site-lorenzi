@@ -186,7 +186,15 @@
     freteGratisAcima: 599,                       // frete Econômico grátis a partir deste valor
     trocaDias: 30,                               // troca grátis em até 30 dias, na loja ou pelos Correios
     retiradaDias: 2,                             // retirada na loja em até 2 dias úteis
-    whatsapp: ''                                 // número da consultora (vazio na demonstração)
+    whatsapp: '',                                // número da consultora (vazio na demonstração)
+    // Order bump da sacola: peça complementar com preço especial, válida só junto com outras peças.
+    // A sacola oferece a primeira da lista que seja do mesmo gênero das peças e ainda não esteja nela.
+    orderBump: [
+      { id: 'cinto-couro-conhaque', preco: 129, texto: 'O acabamento que fecha o look, com calça de alfaiataria ou jeans.' },
+      { id: 'blusa-malha-canelada', preco: 159, texto: 'Vai por baixo do blazer ou sozinha, com a mesma calça.' },
+      { id: 'malha-leve-camelo', preco: 249, texto: 'Sobre os ombros nos dias quentes ou por cima da camisa no fim da tarde.' },
+      { id: 'camisa-linho-cru', preco: 289, texto: 'Linho fresco para usar aberta ou sob o blazer.' }
+    ]
   };
 
   // Lojas de demonstração, uma ou duas por região de CEP (primeiro dígito)

@@ -51,12 +51,13 @@
   }
 
   /* ---------- sacola ---------- */
+  const COM = C.comercial;
   const sacola = {
     itens() { return le('cl_sacola', []).filter(i => C.produto(i.id)); },
     salvar(lista) { guarda('cl_sacola', lista); doc.dispatchEvent(new CustomEvent('cl:sacola')); },
     adicionar(id, tamanho, qtd) {
       const lista = this.itens();
-      const achou = lista.find(i => i.id === id && i.tamanho === tamanho);
+      const achou = lista.find(i => i.id === id && i.tamanho === tamanho && !i.bump);
       if (achou) achou.qtd = Math.min(10, achou.qtd + (qtd || 1)); else lista.push({ id, tamanho, qtd: qtd || 1 });
       this.salvar(lista);
       const p = C.produto(id);
@@ -67,19 +68,48 @@
       if (!lista[indice]) return;
       Object.assign(lista[indice], campos);
       // se o novo tamanho já existe na sacola, junta as quantidades
-      const dup = lista.findIndex((i, n) => n !== indice && i.id === lista[indice].id && i.tamanho === lista[indice].tamanho);
+      const dup = lista.findIndex((i, n) => n !== indice && i.id === lista[indice].id && i.tamanho === lista[indice].tamanho && !i.bump === !lista[indice].bump);
       if (dup > -1) { lista[dup].qtd = Math.min(10, lista[dup].qtd + lista[indice].qtd); lista.splice(indice, 1); }
       this.salvar(lista);
     },
     remover(indice) { const lista = this.itens(); lista.splice(indice, 1); this.salvar(lista); },
     limpar() { this.salvar([]); },
     quantidade() { return this.itens().reduce((s, i) => s + i.qtd, 0); },
-    subtotal() { return this.itens().reduce((s, i) => s + C.produto(i.id).preco * i.qtd, 0); }
+    subtotal() { const l = this.itens(); return l.reduce((s, i) => s + this.precoItem(i, l) * i.qtd, 0); },
+
+    /* order bump: oferta de uma peça complementar com preço especial, aceita com um clique */
+    bumpValido(lista) { return (lista || this.itens()).some(i => !i.bump); },
+    precoItem(i, lista) {
+      const o = i.bump && this.bumpValido(lista) ? (COM.orderBump || []).find(x => x.id === i.id) : null;
+      return o ? o.preco : C.produto(i.id).preco;
+    },
+    ofertaBump() {
+      const lista = this.itens();
+      const atual = lista.find(i => i.bump);
+      if (atual) return (COM.orderBump || []).find(o => o.id === atual.id) || null;
+      const normais = lista.filter(i => !i.bump);
+      if (!normais.length) return null;
+      const conta = {}; normais.forEach(i => { const g = C.produto(i.id).genero; conta[g] = (conta[g] || 0) + i.qtd; });
+      const genero = Object.keys(conta).sort((a, b) => conta[b] - conta[a])[0];
+      return (COM.orderBump || []).find(o => { const p = C.produto(o.id); return p && p.genero === genero && !normais.some(i => i.id === o.id) && p.estoque.some(e => e > 0) && o.preco < p.preco; }) || null;
+    },
+    adicionarBump(id, tamanho) {
+      const lista = this.itens().filter(i => !i.bump);
+      lista.push({ id, tamanho, qtd: 1, bump: true });
+      this.salvar(lista);
+      const o = COM.orderBump.find(x => x.id === id);
+      track('order_bump_add', { item_id: id, tamanho, valor: o.preco });
+      track('add_to_cart', { item_id: id, item_name: C.produto(id).nome, tamanho, quantidade: 1, valor: o.preco, origem: 'order_bump' });
+    },
+    removerBump() {
+      const b = this.itens().find(i => i.bump);
+      this.salvar(this.itens().filter(i => !i.bump));
+      if (b) track('order_bump_remove', { item_id: b.id });
+    }
   };
 
   /* ---------- frete (simulação) ---------- */
   // Em produção vem da transportadora ou da plataforma. Aqui, uma tabela por região do CEP.
-  const COM = C.comercial;
   function frete(cep, subtotal) {
     const d = String(cep || '').replace(/\D/g, '');
     if (d.length !== 8) return null;
@@ -202,10 +232,10 @@
     '<a class="skip" href="#principal">Pular para o conteúdo</a>' +
     '<div class="demo-bar" role="region" aria-label="Benefícios da loja"><a class="demo-selo" href="ajuda.html#demo" title="Loja de demonstração: dados simulados">Demonstração</a>' +
       '<ul class="beneficios" id="beneficios">' +
-        '<li class="on"><a href="ajuda.html#trocas">' + ICONE.troca + 'Troca grátis em até ' + COM.trocaDias + ' dias<span class="longo">, em qualquer loja</span></a></li>' +
-        '<li><a href="ajuda.html#pagamento">' + ICONE.cadeado + 'Pagamento seguro<span class="longo">, até ' + COM.parcelasMax + 'x sem juros</span></a></li>' +
-        '<li><a href="ajuda.html#consultora">' + ICONE.conversa + 'Consultora para ajudar<span class="longo"> na escolha</span></a></li>' +
-        '<li><a href="ajuda.html#lojas">' + ICONE.losango + 'Casa Lorenzi, desde 1989</a></li>' +
+        '<li class="on"><a href="ajuda.html#trocas">' + ICONE.troca + '<span>Troca grátis em até ' + COM.trocaDias + ' dias<span class="longo">, em qualquer loja</span></span></a></li>' +
+        '<li><a href="ajuda.html#pagamento">' + ICONE.cadeado + '<span>Pagamento seguro<span class="longo">, até ' + COM.parcelasMax + 'x sem juros</span></span></a></li>' +
+        '<li><a href="ajuda.html#consultora">' + ICONE.conversa + '<span>Consultora para ajudar<span class="longo"> na escolha</span></span></a></li>' +
+        '<li><a href="ajuda.html#lojas">' + ICONE.losango + '<span>Casa Lorenzi, desde 1989</span></a></li>' +
       '</ul></div>' +
     '<header class="cab" id="cab"><div class="cab-in">' +
       '<button class="cab-icone cab-menu" id="cab-menu" type="button" aria-expanded="false" aria-controls="gaveta"><span class="sr-only">Abrir o menu</span><i aria-hidden="true"></i><i aria-hidden="true"></i></button>' +
