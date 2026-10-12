@@ -65,7 +65,11 @@ A história, aprovada pelo cliente: um fio que liga ela, ele e a casa. Quatro qu
 | 3 | 0.51 a 0.67 | ele sai do tecido andando | título "Uma peça certa para cada ocasião." / sub "Do trabalho ao fim de semana, para ela e para ele." | espiral, ecoando o túnel |
 | 4 | 0.88 a 1.00 | os dois blazers dobrados, parados | logo oficial / título "142 lojas em 21 estados. E alguém para ajudar você a escolher." / CTA "Falar com uma consultora" e link "Conhecer as peças" | (e) subida em etapas, na metade de cima da tela |
 
-## 5. Hero estático (celular e movimento reduzido)
+## 5. Hero no celular e hero estático
+
+Celular e tablet em pé recebem o mesmo filme guiado pela rolagem, numa janela 4:3 logo abaixo da navegação, com as frases embaixo dela (pedido do cliente). O hero estático abaixo fica só para celular deitado e movimento reduzido.
+
+### Hero estático
 
 Fundo: o quadro final (os dois blazers dobrados), com o texto na parte de cima. Logo oficial / título "Roupa boa começa no caimento." / sub "Moda casual e social para a vida adulta. 142 lojas em 21 estados e uma consultora para ajudar você a escolher." / CTA "Falar com uma consultora" e link "Conhecer as peças".
 
