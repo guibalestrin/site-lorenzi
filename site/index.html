@@ -136,8 +136,22 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
 @media (max-height:560px){.cue,.progress{display:none}}
 .hero-static{display:none}
 
-/* hero estático: os cinco portões, idênticos ao JS */
-@media (max-width:720px),(orientation:portrait) and (max-width:1024px),(orientation:portrait) and (pointer:coarse),(orientation:landscape) and (pointer:coarse) and (max-height:560px),(prefers-reduced-motion:reduce){
+/* celular e tablet em pé: o mesmo filme numa janela no alto, as frases embaixo */
+@media (max-width:720px),(orientation:portrait) and (max-width:1024px),(orientation:portrait) and (pointer:coarse){
+  .hero{height:700vh}
+  .stage .poster,.stage video{inset:auto 0;top:64px;width:100%;height:min(75vw,46svh);object-position:58% 50%;background-position:58% 50%;-webkit-mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent);mask-image:linear-gradient(180deg,transparent,#000 8%,#000 90%,transparent)}
+  .scrim,.band::before,.progress{display:none}
+  .band,.band.left,.band.right,.band.first,.band.center,.band.settle{left:20px;right:20px;width:auto;top:calc(64px + min(75vw,46svh) + 22px);transform:none;text-align:left}
+  .band h1,.band h2,.settle h2{font-size:clamp(28px,8vw,44px);max-width:none;margin-inline:0}
+  .band .sub{font-size:16px;margin-top:12px}
+  .band.right .sub{margin-left:0;max-width:none}
+  .fx-rise .seal{width:min(280px,70vw);margin:0 0 18px}
+  .fx-rise .row{justify-content:flex-start;margin-top:20px}
+  .cue{bottom:14px}
+}
+
+/* hero estático: celular deitado e movimento reduzido, idênticos ao JS */
+@media (orientation:landscape) and (pointer:coarse) and (max-height:560px),(prefers-reduced-motion:reduce){
   .hero{height:auto}
   .stage{display:none}
   .hero-static{display:flex;position:relative;min-height:100vh;min-height:100svh;align-items:flex-start;justify-content:center;text-align:center;padding:110px 20px 72px;color:var(--on-ink);background:var(--ink) url("https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/84517e53-4984-4ad4-9ccf-990e24b7b88d.jpg") center bottom/cover no-repeat}
@@ -823,11 +837,10 @@ footer{background:var(--ink);color:var(--on-ink-2);padding:64px 0 40px;font-size
     ring.innerHTML = '<path class="chev" d="M17 20l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
   }
 
-  // os cinco portões, decididos ao vivo (idênticos ao CSS)
+  // os portões do hero estático, decididos ao vivo (idênticos ao CSS)
+  // celular e tablet em pé também recebem o filme (numa janela no alto, pelo CSS);
+  // só o celular deitado e o movimento reduzido ficam com o hero estático
   const GATES = [
-    '(max-width: 720px)',
-    '(orientation: portrait) and (max-width: 1024px)',
-    '(orientation: portrait) and (pointer: coarse)',
     '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)',
     '(prefers-reduced-motion: reduce)'
   ];
