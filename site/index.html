@@ -115,14 +115,14 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
 /* espiral: letras giram em volta do centro, como o túnel de tecido */
 .fx-orbit .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.4,1);opacity:var(--kc);transform:rotate(calc((1 - var(--kc))*var(--jr,0deg))) translate(calc((1 - var(--kc))*var(--jx,0px)),calc((1 - var(--kc))*var(--jy,0px))) scale(calc(.6 + .4*var(--kc)))}
 /* (e) subida em etapas: logo, título, botões */
-.fx-rise .seal{width:min(520px,70vw);margin:0 auto 34px;opacity:clamp(0,var(--k,0)*3,1);filter:drop-shadow(0 2px 14px rgba(10,7,5,.75))}
+.fx-rise .seal{width:min(420px,46vh,70vw);margin:0 auto 2.6vh;opacity:clamp(0,var(--k,0)*3,1);filter:drop-shadow(0 2px 14px rgba(10,7,5,.75))}
 .fx-rise .seal .rule{transform-origin:50% 50%;transform:scaleX(clamp(0,(var(--k,0) - .1)*2.4,1))}
-.fx-rise .w{--kc:clamp(0,(var(--k,0) - .3 - var(--th,0))*3,1);opacity:var(--kc);transform:translateY(calc((1 - var(--kc))*.55em))}
-.fx-rise .row{margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;opacity:clamp(0,(var(--k,0) - .78)*5,1);transform:translateY(calc((1 - clamp(0,(var(--k,0) - .78)*5,1))*12px))}
+.fx-rise .w{--kc:clamp(0,(var(--k,0) - .15 - var(--th,0))*3.4,1);opacity:var(--kc);transform:translateY(calc((1 - var(--kc))*.55em))}
+.fx-rise .row{margin-top:3vh;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;opacity:clamp(0,(var(--k,0) - .78)*5,1);transform:translateY(calc((1 - clamp(0,(var(--k,0) - .78)*5,1))*12px))}
 .band .btn{text-shadow:none}
 .band.live{pointer-events:auto}
-.band.settle{top:clamp(80px,13vh,130px);transform:translateX(-50%)}
-.settle h2{font-size:clamp(28px,3.2vw,46px);line-height:1.18;max-width:24ch;margin-inline:auto}
+.band.settle{top:max(76px,10vh);transform:translateX(-50%)}
+.settle h2{font-size:clamp(22px,4.2vh,40px);line-height:1.18;max-width:26ch;margin-inline:auto}
 .cue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--on-ink-2);transition:opacity .6s var(--ease-out)}
 .cue.gone{opacity:0}
 .spool{width:46px;height:46px;color:var(--on-ink)}
