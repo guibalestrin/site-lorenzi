@@ -14,7 +14,8 @@
  *     desloca: ajustado −4 cm, regular igual ao projeto, solto +4 cm. Sem folga de projeto na
  *     ficha, usa a faixa genérica da região. Na cintura das calças a faixa é fixa (cós no lugar).
  *  4. Tamanhos que apertam em algum ponto são descartados. Entre os demais, vence o de folga
- *     mais próxima da desejada, com peso maior nos pontos principais da peça.
+ *     mais próxima da desejada, com peso maior nos pontos principais da peça. Pontos de faixa
+ *     fixa só pesam quando ficam fora dela.
  *  5. O motor nunca cria medidas de peça: só usa os números presentes na ficha. Sem medida
  *     para os pontos principais, a resposta é "sem_dados".
  */
@@ -98,7 +99,7 @@
   function estadoDaFolga(folga, regra, projeto) {
     if (folga < regra.min) return 'aperta';
     if (regra.fixa) return folga <= regra.fixa[1] ? 'no lugar' : 'folgado';
-    if (typeof projeto === 'number') return folga < projeto - 2 ? 'ajustado' : folga <= projeto + 2 ? 'regular' : 'solto';
+    if (typeof projeto === 'number') return folga < projeto - TOLERANCIA ? 'ajustado' : folga <= projeto + TOLERANCIA ? 'regular' : 'solto';
     if (folga < regra.ajustado[1]) return 'ajustado';
     if (folga < regra.regular[1]) return 'regular';
     return 'solto';
@@ -145,7 +146,8 @@
         return { chave: pt.chave, nome: pt.nome, papel: pt.papel, projeto: typeof pt.folgaProjeto === 'number' ? pt.folgaProjeto : null, peca: s.medidas[pt.chave], corpo: corpo[pt.chave], folga, estado: estadoDaFolga(folga, regra, pt.folgaProjeto), alvo: r1(alvo), faixa: faixa.map(r1), origemAlvo: origem, minimo: regra.min, distancia: r1(distanciaDaFaixa(folga, faixa)), desvio: r1(Math.abs(folga - alvo)) };
       });
       const aperta = pts.some(p => p.estado === 'aperta');
-      const score = pts.reduce((t, p) => t + p.desvio * (p.papel === 'principal' ? 1 : 0.3), 0);
+      // pontos de faixa fixa (cós, cintura do blazer) só pesam quando saem da faixa
+      const score = pts.reduce((t, p) => t + (p.origemAlvo === 'fixa' ? p.distancia : p.desvio) * (p.papel === 'principal' ? 1 : 0.3), 0);
       return { sku: s.sku, tamanho: s.tamanho, disponivel: !!s.disponivel, temDados, aperta, score: r1(score), pontos: pts };
     });
 

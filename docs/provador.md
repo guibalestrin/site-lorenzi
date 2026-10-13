@@ -65,7 +65,7 @@ A ficha da peça indica quais pontos definem o tamanho em cada categoria e a fol
    - Parte da folga de projeto da peça, e a preferência a desloca: ajustado −4 cm, regular igual ao projeto, solto +4 cm. A tolerância é de ±3 cm.
    - No cós da calça a faixa é fixa, de −1 a 4 cm.
    - Sem folga de projeto, valem faixas genéricas por região.
-5. **Escolha:** vence o tamanho de folga mais próxima da desejada. Pontos principais pesam 1 e o ponto de apoio (cintura do blazer) pesa 0,3. No empate, ganha o disponível e depois o maior.
+5. **Escolha:** vence o tamanho de folga mais próxima da desejada. Pontos principais pesam 1 e o ponto de apoio (cintura do blazer) pesa 0,3. Pontos de faixa fixa (cós e cintura do blazer) só pesam quando ficam fora da faixa. No empate, ganha o disponível e depois o maior.
 6. **Grau de correspondência** (não é uma probabilidade):
 
    | Grau | Quando |
