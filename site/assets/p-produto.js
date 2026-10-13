@@ -1,8 +1,9 @@
 /* Página de produto: fotos, tamanho com ajuda do caimento, medidas, frete, sacola */
 (function () {
   'use strict';
-  const { C, esc, brl, params, track, sacola, frete, valorFrete, chegaAte, precoHTML, lojasPerto, dispLoja, favoritos, vistos, aviseMe, card, lateral, le, guarda, ICONE } = window.CL;
+  const { C, esc, brl, params, track, sacola, frete, valorFrete, chegaAte, precoHTML, lojasPerto, favoritos, vistos, aviseMe, card, lateral, le, guarda, ICONE } = window.CL;
   const A = window.CL_AVALIACOES;
+  const E = window.CLEstoque;
   const raiz = document.getElementById('pdp');
   const p = C.produto(params().get('id') || '');
   if (!p) {
@@ -23,10 +24,24 @@
   const offTams = p.tamanhos.filter((t, i) => !p.estoque[i]);
   const ESTADO_TXT = { Ajustado: 'marca a silhueta; se preferir mais folga, suba um tamanho', 'No corpo': 'acompanha o corpo sem apertar', Amplo: 'cai solta, com folga proposital' };
   vistos.add(p.id);
+  const vend = E.vendedorAtivo();
   // o que combina com esta peça, além do look (mesmo gênero, categorias complementares)
   const doLook = (p.looks || []).flatMap(id => C.look(id).itens);
   const combina = (C.combina[p.categoria] || []).flatMap(cat => C.produtos.filter(x => x.categoria === cat && x.genero === p.genero && x.id !== p.id && !doLook.includes(x.id))).slice(0, 4);
   const recentes = vistos.lista().filter(id => id !== p.id).slice(0, 4);
+
+  // "Disponível em loja": resumo do estoque integrado (lojas perto + CD) para o tamanho escolhido
+  function resumoLojas(t) {
+    const cep = le('cl_cep', '');
+    if (!t) {
+      const n = C.lojas.filter(l => p.tamanhos.some(x => E.naLoja(l.id, p.id, x))).length;
+      return 'Esta peça está em <b>' + n + ' de ' + C.lojas.length + ' lojas</b>. Escolha o tamanho para ver onde ele está.';
+    }
+    const m = E.mapa(p.id, t, lojasPerto(cep).slice(0, 4));
+    const melhor = m.lojas.find(x => x.qtd > 0);
+    if (!m.lojasCom) return 'Tamanho <b>' + t + '</b>: nenhuma das lojas mais perto tem agora.' + (m.cd ? ' Compre no site e retire grátis numa loja.' : '');
+    return 'Tamanho <b>' + t + '</b>: em <b>' + m.lojasCom + ' de 4 lojas</b> ' + (cep ? 'perto do CEP ' + esc(cep) : 'perto de você') + '. A ' + esc(melhor.loja.nome) + ' tem ' + (melhor.qtd === 1 ? '1 peça' : melhor.qtd + ' peças') + '.';
+  }
 
   const fotos = [
     { src: C.foto(p.fotos[0]), alt: p.nome + ', foto da peça em fundo neutro', leg: 'A peça' },
@@ -45,6 +60,7 @@
         '<div class="miniaturas" role="group" aria-label="Escolher foto">' + fotos.map((f, i) => '<button type="button" data-i="' + i + '" aria-label="' + f.leg + '"' + (i ? '' : ' aria-current="true"') + '><img src="' + f.src + '" alt=""' + (f.detalhe ? ' class="detalhe"' : '') + '></button>').join('') + '</div>' +
       '</div>' +
       '<div class="info">' +
+        (vend ? '<p class="vend-faixa">' + ICONE.loja + '<span>Atendimento de <b>' + esc(vend.nome) + '</b> · ' + esc(E.loja(vend.loja).nome) + '. Comprando pelo site ou retirando em outra loja, a venda continua contando para quem atendeu você.</span></p>' : '') +
         '<p class="kicker"><span class="dia" aria-hidden="true"></span>' + genTxt + ' · ' + cat.nome + (p.novidade ? ' · Novidade' : '') + '</p>' +
         '<h1 class="h1 nome">' + esc(p.nome) + '</h1>' +
         '<p class="ref mono">Ref. ' + p.ref + '</p>' +
@@ -55,9 +71,10 @@
           '<fieldset class="tamanhos"><div class="tam-topo"><legend class="rot">Tamanho</legend><span class="tam-links">' + (fichaPv.aplicavel ? '<button class="link-ajuda" type="button" id="qual-tam">Qual é o meu tamanho?</button>' : '') + '<button class="link-ajuda" type="button" id="abrir-guia">Guia de tamanhos</button></span></div>' +
             '<div class="chips">' + p.tamanhos.map((t, i) => '<label class="chip"><input type="radio" name="tam" value="' + t + '"' + (p.estoque[i] ? '' : ' disabled') + '><span>' + t + '</span></label>').join('') + '</div>' +
             '<p class="disp" id="disp" aria-live="polite">' + (offTams.length ? 'Tamanhos riscados estão indisponíveis.' : 'Todos os tamanhos disponíveis.') + '</p>' +
-            (offTams.length ? '<p class="avise">' + ICONE.sino + '<span>Seu tamanho acabou?</span> <button class="link-ajuda" type="button" id="avise">Avise-me quando voltar</button></p>' : '') +
+            (offTams.length ? '<p class="avise">' + ICONE.sino + '<span>Esgotado no site? Pode estar numa loja.</span> <button class="link-ajuda" type="button" data-ver-lojas>Ver em loja</button> <button class="link-ajuda" type="button" id="avise">Avise-me quando voltar</button></p>' : '') +
             (p.categoria !== 'acessorios' ? '<p class="modelagem-info"><b>Modelagem ' + modTxt + ':</b> ' + ESTADO_TXT[p.modelagem] + '.' + (p.modelo ? ' ' + (p.genero === 'feminino' ? 'A modelo' : 'O modelo') + ' tem ' + p.modelo.altura + ' e veste ' + p.modelo.tamanho + '.' : '') + ' <a href="#avaliacoes" data-filtro-caimento="certo">' + pctCerto + '% ' + (p.genero === 'feminino' ? 'das clientes' : 'dos clientes') + ' dizem que veste como esperado</a>.</p>' : '') +
           '</fieldset>' +
+          '<div class="em-loja" id="em-loja"><div><p class="rot">' + ICONE.loja + 'Disponível em loja</p><p id="em-loja-res">' + resumoLojas('') + '</p></div><button class="btn sec" type="button" id="ver-lojas">Ver em loja</button></div>' +
           (fichaPv.aplicavel
             ? '<div class="provador-box" id="provador-box"><div><p class="rot">Descubra seu tamanho ideal</p><p>Altura, peso e como você gosta que a roupa caia. Cruzamos com as medidas desta peça, tamanho por tamanho.</p></div><button class="btn sec" type="button" id="abrir-provador">Descubra seu tamanho ideal</button><p class="pv-ja" id="pv-ja" aria-live="polite" hidden></p></div>'
             : '<div class="provador-box sem-dados"><p class="rot">Provador</p><p>' + esc(fichaPv.motivo) + '</p></div>') +
@@ -78,8 +95,7 @@
             '<button class="link-ajuda" type="button" data-ajuda="look" data-produto="' + p.id + '">Ajuda para montar o look?</button>' +
           '</div>' +
         '</div>' +
-        '<form class="frete-box" id="form-frete" novalidate><label class="rot" for="cep">Prazo e frete</label><p class="frete-dica">Consulte o prazo de entrega para o seu endereço.</p><div class="cx-in"><input id="cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9" aria-describedby="frete-res"><button class="btn sec" type="submit">Calcular</button></div><div id="frete-res" aria-live="polite"></div>' +
-          '<button class="link-ajuda lojas-btn" type="button" id="ver-lojas">' + ICONE.loja + 'Ver disponibilidade numa loja perto de você</button></form>' +
+        '<form class="frete-box" id="form-frete" novalidate><label class="rot" for="cep">Prazo e frete</label><p class="frete-dica">Consulte o prazo de entrega para o seu endereço.</p><div class="cx-in"><input id="cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9" aria-describedby="frete-res"><button class="btn sec" type="submit">Calcular</button></div><div id="frete-res" aria-live="polite"></div></form>' +
         '<div class="acordeoes">' +
           '<details open><summary>Descrição</summary><p>' + esc(p.descricao) + '</p></details>' +
           '<details' + (usaGuia ? '' : ' open') + '><summary>Medidas da peça (cm)</summary>' + tabela + '<p class="nota">Medidas da peça, não do corpo, de exemplo. Compare com uma roupa sua que veste bem.</p></details>' +
@@ -121,6 +137,7 @@
     if (e.target.name !== 'tam') return;
     erroTam.hidden = true;
     const t = e.target.value;
+    document.getElementById('em-loja-res').innerHTML = resumoLojas(t);
     const q = p.estoque[p.tamanhos.indexOf(t)];
     disp.innerHTML = q <= 2 ? '<span class="pouco">Tamanho ' + t + ': ' + (q === 1 ? 'última unidade' : 'últimas ' + q + ' unidades') + ' no site.</span>' : 'Tamanho ' + t + ': disponível para entrega e retirada na loja.';
     const ind = window.CLProvador.indicacao(p.id);
@@ -239,32 +256,65 @@
   const avise = document.getElementById('avise');
   if (avise) avise.addEventListener('click', () => aviseMe(p, ''));
 
-  /* ---------- disponibilidade nas lojas ---------- */
-  document.getElementById('ver-lojas').addEventListener('click', () => {
+  /* ---------- disponível em loja: estoque integrado das lojas e do CD ---------- */
+  function abrirLojas() {
     const corpoL = document.createElement('div');
+    let tSel = tamanhoEscolhido();
+    let feito = null;
     const desenhaLojas = () => {
       const cep = le('cl_cep', '');
-      const t = tamanhoEscolhido();
-      const perto = lojasPerto(cep).slice(0, 4);
-      const rot = q => q === 0 ? '<span class="disp-loja off">Indisponível</span>' : q === 1 ? '<span class="disp-loja pouco">Última unidade</span>' : '<span class="disp-loja ok">Disponível</span>';
+      const perto = lojasPerto(cep).slice(0, 5);
+      const rot = q => q === 0 ? '<span class="disp-loja off">Indisponível</span>' : q === 1 ? '<span class="disp-loja pouco">Última peça</span>' : '<span class="disp-loja ok">' + q + ' peças</span>';
+      const m = tSel ? E.mapa(p.id, tSel, perto) : null;
       corpoL.innerHTML =
-        '<form class="cx-in" id="lojas-cep" novalidate style="margin-bottom:12px"><label class="sr-only" for="lojas-cep-in">CEP</label><input id="lojas-cep-in" inputmode="numeric" placeholder="Seu CEP" maxlength="9" value="' + esc(cep) + '"><button class="btn sec" type="submit">Buscar</button></form>' +
-        '<p class="nota" style="margin-bottom:14px">' + (cep ? 'Lojas mais perto do CEP ' + esc(cep) + '.' : 'Informe o CEP para ver as lojas mais perto.') + (t ? ' Mostrando o tamanho <b>' + t + '</b>.' : ' Escolha um tamanho na página para ver só ele.') + '</p>' +
-        '<ul class="lojas-lista">' + perto.map(l => '<li><div><strong>' + esc(l.nome) + '</strong><small>' + esc(l.cidade) + '</small></div>' +
-          (t ? rot(dispLoja(l.id, p.id, t)) : '<span class="tams-loja">' + p.tamanhos.map(x => '<i class="' + (dispLoja(l.id, p.id, x) ? '' : 'off') + '" title="' + x + (dispLoja(l.id, p.id, x) ? ' disponível' : ' indisponível') + '">' + x + '</i>').join('') + '</span>') + '</li>').join('') + '</ul>' +
-        '<p class="nota">Compre no site e retire grátis em até ' + C.comercial.retiradaDias + ' dias úteis, ou prove na loja. Estoque das lojas de demonstração.</p>';
+        (feito ? '<div class="msg ok" role="status" style="margin-bottom:16px"><strong>' + (feito.tipo === 'reserva' ? 'Reservado na ' + esc(E.loja(feito.origem).nome) : 'Encomendado para a ' + esc(E.loja(feito.destino).nome)) + '.</strong>' +
+          (feito.tipo === 'reserva' ? 'A loja guarda o ' + feito.tamanho + ' por ' + E.RESERVA_HORAS + ' horas para você provar.' : 'O ' + feito.tamanho + ' sai do CD e chega na loja no próximo dia útil.') + ' Código <b class="mono">' + feito.codigo + '</b>. (Demonstração: nada é reservado de verdade.)</div>' : '') +
+        '<form class="cx-in" id="lojas-cep" novalidate style="margin-bottom:14px"><label class="sr-only" for="lojas-cep-in">CEP</label><input id="lojas-cep-in" inputmode="numeric" placeholder="Seu CEP" maxlength="9" value="' + esc(cep) + '"><button class="btn sec" type="submit">Buscar</button></form>' +
+        '<fieldset class="campo lojas-tam"><legend class="rot">Tamanho</legend><div class="chips">' + p.tamanhos.map(x => '<label class="chip"><input type="radio" name="lt" value="' + x + '"' + (x === tSel ? ' checked' : '') + '><span>' + x + '</span></label>').join('') + '</div></fieldset>' +
+        '<p class="nota" style="margin:10px 0 14px">' + (cep ? 'Lojas mais perto do CEP ' + esc(cep) + '.' : 'Informe o CEP para ver as lojas mais perto.') + (tSel ? '' : ' Escolha um tamanho para reservar.') + '</p>' +
+        '<ul class="lojas-lista">' +
+          '<li class="cd"><div><strong>Site · entrega em casa</strong><small>Sai do ' + E.CD.nome + ', ' + E.CD.cidade + '</small></div>' +
+            (tSel ? (m.cd ? '<span class="disp-loja ok">Disponível</span>' : '<span class="disp-loja off">Esgotado no site</span>') : '<span class="tams-loja">' + p.tamanhos.map(x => '<i class="' + (E.noCD(p.id, x) ? '' : 'off') + '">' + x + '</i>').join('') + '</span>') + '</li>' +
+          perto.map((l, n) => '<li><div><strong>' + esc(l.nome) + '</strong><small>' + esc(l.cidade) + '</small></div>' +
+            (tSel ? '<span class="loja-acao">' + rot(m.lojas[n].qtd) + (m.lojas[n].qtd ? '<button class="btn sec mini" type="button" data-reservar="' + l.id + '">Reservar</button>' : '') + '</span>'
+              : '<span class="tams-loja">' + p.tamanhos.map(x => '<i class="' + (E.naLoja(l.id, p.id, x) ? '' : 'off') + '" title="' + x + (E.naLoja(l.id, p.id, x) ? ' disponível' : ' indisponível') + '">' + x + '</i>').join('') + '</span>') + '</li>').join('') +
+        '</ul>' +
+        (tSel && !m.lojasCom && m.cd ? '<div class="msg info" style="margin-bottom:12px"><strong>Nenhuma loja perto tem o ' + tSel + ' agora.</strong>Peça para a ' + esc(perto[0].nome) + ': o CD envia e a peça chega lá no próximo dia útil. <button class="link-ajuda" type="button" data-encomendar="' + perto[0].id + '">Encomendar para a loja</button></div>' : '') +
+        '<p class="nota">Lojas, CD e site usam o mesmo estoque. Reserve para provar, ou compre no site e retire grátis em até ' + C.comercial.retiradaDias + ' dias úteis. Estoque de demonstração.</p>';
       corpoL.querySelector('#lojas-cep').addEventListener('submit', e => {
         e.preventDefault();
         const v = corpoL.querySelector('#lojas-cep-in').value.replace(/\D/g, '');
         if (v.length !== 8) { corpoL.querySelector('#lojas-cep-in').setAttribute('aria-invalid', 'true'); return; }
         guarda('cl_cep', v.slice(0, 5) + '-' + v.slice(5));
+        feito = null;
         desenhaLojas();
+        document.getElementById('em-loja-res').innerHTML = resumoLojas(tamanhoEscolhido());
       });
     };
+    corpoL.addEventListener('change', e => { if (e.target.name === 'lt') { tSel = e.target.value; feito = null; desenhaLojas(); corpoL.querySelector('input[name=lt]:checked').focus(); } });
+    corpoL.addEventListener('click', e => {
+      const b = e.target.closest('[data-reservar],[data-encomendar]');
+      if (!b) return;
+      feito = b.dataset.reservar
+        ? E.reservar({ id: p.id, tamanho: tSel, origem: b.dataset.reservar })
+        : E.reservar({ id: p.id, tamanho: tSel, origem: 'cd', destino: b.dataset.encomendar });
+      track(feito.tipo === 'reserva' ? 'store_reserve' : 'store_order_from_cd', { item_id: p.id, tamanho: tSel, loja: feito.destino, vendedor: feito.vendedor || undefined });
+      desenhaLojas();
+      corpoL.parentElement.scrollTop = 0;
+      document.getElementById('em-loja-res').innerHTML = resumoLojas(tamanhoEscolhido());
+    });
     desenhaLojas();
-    lateral('Disponibilidade nas lojas', corpoL).abrir();
-    track('store_availability_check', { item_id: p.id, tamanho: tamanhoEscolhido() || undefined });
-  });
+    lateral('Disponível em loja', corpoL).abrir();
+    track('store_availability_check', { item_id: p.id, tamanho: tSel || undefined });
+  }
+  document.getElementById('ver-lojas').addEventListener('click', abrirLojas);
+  document.querySelectorAll('[data-ver-lojas]').forEach(b => b.addEventListener('click', abrirLojas));
+
+  /* ---------- link do vendedor: já abre com o tamanho que ele escolheu ---------- */
+  const tamLink = params().get('tam');
+  const inpLink = tamLink && form.querySelector('input[name=tam][value="' + CSS.escape(tamLink) + '"]');
+  if (inpLink && !inpLink.disabled) { inpLink.checked = true; inpLink.dispatchEvent(new Event('change', { bubbles: true })); }
+  if (location.hash === '#em-loja') document.getElementById('em-loja').scrollIntoView({ block: 'center' });
 
   /* ---------- avaliações ---------- */
   const secAv = document.getElementById('avaliacoes');

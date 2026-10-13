@@ -198,7 +198,9 @@
   }
 
   function concluir(pedido, metodo) {
-    track('purchase', { pedido: pedido.id, metodo, valor: pedido.total, itens: pedido.itens.reduce((s, i) => s + i.qtd, 0) });
+    // estoque integrado: se a cliente veio pelo link de um vendedor, a venda é creditada a ele
+    const venda = window.CLEstoque ? window.CLEstoque.registraVenda(pedido) : null;
+    track('purchase', { pedido: pedido.id, metodo, valor: pedido.total, itens: pedido.itens.reduce((s, i) => s + i.qtd, 0), vendedor: venda ? venda.vendedor : undefined });
     const email = $('[name=email]').value;
     sacola.limpar();
     guarda('cl_frete', null);
@@ -208,6 +210,7 @@
       '<h1 class="h1">Pedido recebido.</h1>' +
       '<p class="lede">Número <b class="mono">' + pedido.id + '</b>. No site real, a confirmação e o rastreio iriam para <b>' + esc(email) + '</b>.</p>' +
       '<div class="msg info"><strong>Loja de demonstração</strong>Nada foi cobrado e nenhum dado foi enviado. Total simulado: ' + brl(pedido.total) + ' (' + ({ pix: 'Pix', cartao: 'cartão de crédito', cartao_lorenzi: 'Cartão Casa Lorenzi' }[metodo] || metodo) + ').</div>' +
+      (venda ? '<div class="msg ok" style="margin-top:12px"><strong>Venda creditada a ' + esc(window.CLEstoque.vendedor(venda.vendedor).nome) + '.</strong>Você veio pelo link do vendedor, então a comissão fica com quem atendeu você, mesmo com a compra fechada no site. <a href="vendedor.html?v=' + venda.vendedor + '#comissao">Ver no app do vendedor</a></div>' : '') +
       '<div class="acoes-linha"><a class="btn grande" href="loja.html">Continuar comprando</a><a class="btn sec" href="metricas.html">Ver o painel de medição</a></div></div>';
     document.getElementById('conf').focus();
     scrollTo(0, 0);
