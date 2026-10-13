@@ -8,27 +8,27 @@
  */
 (function () {
   'use strict';
-  const CDN = 'https://d2ol7oe51mr4n9.cloudfront.net/user_3Kb3YKeSIaGwJYI6odUy0XejCWs/';
+  const MIDIA = 'assets/media/';
 
   // Fotos da peça (fundo neutro) e da peça no corpo (os looks do filme).
   const FOTO = {
-    corpoTrabalho: CDN + 'c0bf5203-9c10-4151-aeb1-fa2d86dfd695.jpg',
-    corpoJantar: CDN + 'cc0b3ff8-3877-4639-bde5-0ce3a97c123b.jpg',
-    corpoDia: CDN + '452c4fa4-0c5a-4572-be2f-1b0b9580c80b.jpg',
-    corpoFimDeSemana: CDN + 'fcf8e7f1-1e83-43f7-ad9c-c62daeb3ae40.jpg',
-    // PECAS: preenchido com as fotos de produto hospedadas
+    corpoTrabalho: MIDIA + 'peca-trabalho.jpg',
+    corpoJantar: MIDIA + 'peca-jantar.jpg',
+    corpoDia: MIDIA + 'peca-dia.jpg',
+    corpoFimDeSemana: MIDIA + 'peca-fimdesemana.jpg',
+    // PECAS: fotos de produto, servidas junto com o site
     pecas: {
-      'blazer-linho-cru': CDN + '8c08ff2b-f290-471e-89d2-34e18f54d7be.jpg',
-      'camisa-seda-marfim': CDN + '698bce64-30cc-45de-ba4d-ffb21d4aba97.jpg',
-      'calca-alfaiataria-cintura-alta': CDN + 'c341b783-a1ed-455e-af60-c16bf5188b64.jpg',
-      'blusa-malha-canelada': CDN + 'e2f33858-f647-4ad8-a088-70937f9c7568.jpg',
-      'cinto-couro-conhaque': CDN + '2a3908c8-f66d-42e6-895a-e1aa25ca2fad.jpg',
-      'blazer-la-marinho': CDN + '76ceed54-37b5-4ef6-a158-fcb241d1249c.jpg',
-      'camisa-social-marinho': CDN + 'dfc5687d-ab08-42a5-b036-653091772518.jpg',
-      'calca-alfaiataria-clara': CDN + '86023574-dc8f-4f61-84a4-04e388ab79fa.jpg',
-      'camisa-linho-cru': CDN + 'fbd5cc1f-fe76-4bbd-858c-cd4b3c2087e7.jpg',
-      'malha-leve-camelo': CDN + 'acf4ccdc-a886-473a-841a-f89eb1c40fef.jpg',
-      'calca-reta-grafite': CDN + '62767623-e747-40a9-9f7d-08f709876104.jpg'
+      'blazer-linho-cru': MIDIA + 'produto-blazer-linho-cru.jpg',
+      'camisa-seda-marfim': MIDIA + 'produto-camisa-seda-marfim.jpg',
+      'calca-alfaiataria-cintura-alta': MIDIA + 'produto-calca-alfaiataria-cintura-alta.jpg',
+      'blusa-malha-canelada': MIDIA + 'produto-blusa-malha-canelada.jpg',
+      'cinto-couro-conhaque': MIDIA + 'produto-cinto-couro-conhaque.jpg',
+      'blazer-la-marinho': MIDIA + 'produto-blazer-la-marinho.jpg',
+      'camisa-social-marinho': MIDIA + 'produto-camisa-social-marinho.jpg',
+      'calca-alfaiataria-clara': MIDIA + 'produto-calca-alfaiataria-clara.jpg',
+      'camisa-linho-cru': MIDIA + 'produto-camisa-linho-cru.jpg',
+      'malha-leve-camelo': MIDIA + 'produto-malha-leve-camelo.jpg',
+      'calca-reta-grafite': MIDIA + 'produto-calca-reta-grafite.jpg'
     }
   };
 
