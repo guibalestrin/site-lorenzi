@@ -11,6 +11,8 @@ Site conceitual da Casa Lorenzi (case de estudo). A entrada é um filme de 16 se
   - `checkout.html`: o checkout de uma página, sem cadastro.
   - `ajuda.html`: tamanhos, entrega, pagamento, trocas, lojas e consultora.
   - `metricas.html`: o funil medido pelos eventos.
+  - `vendedor.html`: a proposta de estoque integrado (lojas, site e CD) e o app do vendedor de demonstração: estoque da rede por tamanho, reserva em outra loja, encomenda do CD, link do vendedor e comissão.
+  - `assets/estoque.js`: o estoque integrado simulado, as reservas, o link do vendedor (`produto.html?id=...&vend=ana`) e a comissão. Na página da peça, o bloco "Disponível em loja" usa o mesmo módulo.
   - `assets/catalogo.js`: o catálogo de demonstração (preços, estoque e composição são exemplos).
   - `assets/loja.js`: o cabeçalho, a busca, a sacola, o frete simulado, a gaveta da consultora e a medição.
   - `assets/pagamento.js`: o adaptador de pagamento, incluindo o tratamento da falha do Cartão Casa Lorenzi.

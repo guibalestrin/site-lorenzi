@@ -261,7 +261,7 @@
     '<div class="gaveta" id="gaveta" hidden>' +
       '<ul class="prim">' + navLinks.map(l => '<li><a href="' + l[0] + '">' + l[1] + '</a></li>').join('') + '<li><a href="look.html">Looks</a></li></ul>' +
       '<h2>Peças</h2><ul class="sec">' + C.categorias.map(c => '<li><a href="loja.html?cat=' + c.id + '">' + c.nome + '</a></li>').join('') + '<li><a href="loja.html">Todas as peças</a></li><li><a href="favoritos.html">Favoritos</a></li></ul>' +
-      '<h2>Atendimento</h2><ul class="sec"><li><a href="ajuda.html#lojas">Lojas</a></li><li><a href="ajuda.html">Ajuda, trocas e tamanhos</a></li></ul>' +
+      '<h2>Atendimento</h2><ul class="sec"><li><a href="ajuda.html#lojas">Lojas</a></li><li><a href="vendedor.html">Estoque integrado</a></li><li><a href="ajuda.html">Ajuda, trocas e tamanhos</a></li></ul>' +
       '<button class="btn sec" type="button" data-ajuda="escolher">Preciso de ajuda para escolher</button>' +
     '</div>';
   const holder = doc.createElement('div');
@@ -359,7 +359,7 @@
       '<div><div class="logo"><svg class="lg" role="img" aria-label="Casa Lorenzi, 1989"><use href="#cl-logo"/></svg></div><p>Moda casual e social desde 1989.<br>142 lojas em 21 estados.</p></div>' +
       '<div><h2>Comprar</h2><ul><li><a href="loja.html?novidades=1">Novidades</a></li><li><a href="loja.html?g=feminino">Feminino</a></li><li><a href="loja.html?g=masculino">Masculino</a></li><li><a href="look.html">Looks</a></li><li><a href="favoritos.html">Favoritos</a></li></ul></div>' +
       '<div><h2>Ajuda</h2><ul><li><a href="ajuda.html#tamanhos">Guia de tamanhos</a></li><li><a href="ajuda.html#trocas">Trocas</a></li><li><a href="ajuda.html#pagamento">Pagamento</a></li><li><a href="ajuda.html#entrega">Entrega</a></li></ul></div>' +
-      '<div><h2>Casa Lorenzi</h2><ul><li><a href="ajuda.html#lojas">Lojas</a></li><li><a href="ajuda.html#consultora">Falar com uma consultora</a></li><li><a href="metricas.html">Painel de medição (demo)</a></li></ul></div>' +
+      '<div><h2>Casa Lorenzi</h2><ul><li><a href="ajuda.html#lojas">Lojas</a></li><li><a href="ajuda.html#consultora">Falar com uma consultora</a></li><li><a href="vendedor.html">Estoque integrado: lojas, site e CD</a></li><li><a href="metricas.html">Painel de medição (demo)</a></li></ul></div>' +
       '</div><p class="aviso">Projeto conceitual de um case de estudo. Loja de demonstração: produtos, preços, estoque, medidas, composição, frete e pagamentos são simulados. Imagens geradas por IA. Nenhum dado é enviado.</p></div>';
   }
 
