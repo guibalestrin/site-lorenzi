@@ -12,6 +12,21 @@
     const disp = p.tamanhos.filter((t, k) => p.estoque[k] > 0);
     return disp.slice().sort((a, b) => Math.abs(ordem.indexOf(a) - ordem.indexOf(ref)) - Math.abs(ordem.indexOf(b) - ordem.indexOf(ref)))[0] || '';
   }
+  // tamanho indicado pelo provador: o guardado no item ou o calculado com o perfil disponível
+  function recDe(i) {
+    if (i.bump) return null;
+    if (i.rec) return i.rec;
+    const ind = window.CLProvador && window.CLProvador.indicacao(i.id);
+    return ind && ind.status === 'ok' ? ind.tamanho : null;
+  }
+  function recHTML(i) {
+    const r = recDe(i);
+    if (!r) return '';
+    const p = C.produto(i.id);
+    if (r === i.tamanho) return '<p class="rec-sacola">✓ Tamanho indicado pelo provador</p>';
+    const temEstoque = p.estoque[p.tamanhos.indexOf(r)] > 0;
+    return '<p class="rec-sacola difere">O provador indicou o ' + r + ' para você nesta peça.' + (temEstoque ? ' <button type="button" data-acao="usar-rec" data-t="' + r + '">Trocar para ' + r + '</button>' : '') + '</p>';
+  }
   function bumpHTML(itens) {
     const o = sacola.ofertaBump();
     if (!o) return '';
@@ -65,6 +80,7 @@
             '<div class="item-txt">' +
               '<h2><a href="produto.html?id=' + p.id + '">' + esc(p.nome) + '</a></h2>' +
               '<p class="meta"><span class="cor-ponto" style="background:' + p.cor.hex + '"></span>' + esc(p.cor.nome) + ' · ref. ' + p.ref + '</p>' +
+              recHTML(i) +
               '<div class="item-ctl">' +
                 '<label><span class="sr-only">Tamanho de ' + esc(p.nome) + '</span><select data-acao="tam">' + p.tamanhos.map((t, k) => '<option value="' + t + '"' + (t === i.tamanho ? ' selected' : '') + (p.estoque[k] ? '' : ' disabled') + '>Tamanho ' + t + (p.estoque[k] ? '' : ' (indisponível)') + '</option>').join('') + '</select></label>' +
                 (i.bump ? '<span class="tag-bump">Oferta da sacola · 1 unidade</span>' : '<div class="qtd" role="group" aria-label="Quantidade de ' + esc(p.nome) + '"><button type="button" data-acao="menos" aria-label="Diminuir"' + (i.qtd <= 1 ? ' disabled' : '') + '>−</button><output aria-live="polite">' + i.qtd + '</output><button type="button" data-acao="mais" aria-label="Aumentar"' + (i.qtd >= 10 ? ' disabled' : '') + '>+</button></div>') +
@@ -101,6 +117,7 @@
     const i = sacola.itens()[n];
     if (b.dataset.acao === 'mais') sacola.alterar(n, { qtd: Math.min(10, i.qtd + 1) });
     if (b.dataset.acao === 'menos') sacola.alterar(n, { qtd: Math.max(1, i.qtd - 1) });
+    if (b.dataset.acao === 'usar-rec') { sacola.alterar(n, { tamanho: b.dataset.t, rec: b.dataset.t }); track('provador_cart_switch', { item_id: i.id, de: i.tamanho, para: b.dataset.t }); }
     if (b.dataset.acao === 'remover') { sacola.remover(n); track('remove_from_cart', { item_id: i.id, tamanho: i.tamanho }); }
     desenha();
     const alvo = raiz.querySelector('.item[data-n="' + n + '"] [data-acao="' + b.dataset.acao + '"]') || raiz.querySelector('h1');

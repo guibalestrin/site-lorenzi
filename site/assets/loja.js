@@ -55,13 +55,15 @@
   const sacola = {
     itens() { return le('cl_sacola', []).filter(i => C.produto(i.id)); },
     salvar(lista) { guarda('cl_sacola', lista); doc.dispatchEvent(new CustomEvent('cl:sacola')); },
-    adicionar(id, tamanho, qtd) {
+    // extra.rec: tamanho indicado pelo provador para esta peça (só a letra, nenhum dado pessoal)
+    adicionar(id, tamanho, qtd, extra) {
       const lista = this.itens();
+      const rec = extra && extra.rec;
       const achou = lista.find(i => i.id === id && i.tamanho === tamanho && !i.bump);
-      if (achou) achou.qtd = Math.min(10, achou.qtd + (qtd || 1)); else lista.push({ id, tamanho, qtd: qtd || 1 });
+      if (achou) { achou.qtd = Math.min(10, achou.qtd + (qtd || 1)); if (rec) achou.rec = rec; } else lista.push(Object.assign({ id, tamanho, qtd: qtd || 1 }, rec ? { rec } : {}));
       this.salvar(lista);
       const p = C.produto(id);
-      track('add_to_cart', { item_id: id, item_name: p.nome, tamanho, quantidade: qtd || 1, valor: p.preco * (qtd || 1) });
+      track('add_to_cart', { item_id: id, item_name: p.nome, tamanho, quantidade: qtd || 1, valor: p.preco * (qtd || 1), tamanho_indicado: rec || undefined, origem: (extra && extra.origem) || undefined });
     },
     alterar(indice, campos) {
       const lista = this.itens();

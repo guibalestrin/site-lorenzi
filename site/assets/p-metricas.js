@@ -50,6 +50,21 @@
         '<section><h2 class="rot">Sinais de confiança e relacionamento</h2><table class="tabela"><thead><tr><th scope="col">Evento</th><th scope="col">Vezes</th></tr></thead><tbody>' +
           [['add_to_wishlist', 'Salvou nos favoritos'], ['back_in_stock_request', 'Pediu aviso de reposição'], ['newsletter_signup', 'Assinou as novidades'], ['review_filter', 'Filtrou avaliações'], ['size_guide_used', 'Usou o guia de tamanho'], ['store_availability_check', 'Consultou lojas'], ['shipping_quote', 'Calculou o frete'], ['order_bump_view', 'Viu o order bump'], ['order_bump_add', 'Aceitou o order bump'], ['order_bump_remove', 'Tirou o order bump']].map(([k, r]) => '<tr><td>' + r + ' <span class="mono" style="font-size:11px;color:var(--text-secondary)">' + k + '</span></td><td>' + total(k) + '</td></tr>').join('') + '</tbody></table></section>' +
       '</div>' +
+      (function () {
+        // provador: uso, conclusão, abandono e conversão das sessões que usaram x que não usaram
+        const abriu = ids.filter(id => sessoes[id].has('provador_open'));
+        const concluiu = ids.filter(id => sessoes[id].has('provador_complete'));
+        const viuPeca = ids.filter(id => sessoes[id].has('view_item'));
+        const semPv = viuPeca.filter(id => !sessoes[id].has('provador_complete'));
+        const compra = l => l.filter(id => sessoes[id].has('purchase')).length;
+        const st = {}; ev.filter(e => e.event === 'provador_complete').forEach(e => { st[e.status] = (st[e.status] || 0) + 1; });
+        return '<h2 class="h2 metr-t">Provador virtual</h2><div class="metr-cards">' +
+          '<div class="metr-card"><span>Sessões que abriram</span><b>' + abriu.length + '</b><small>' + pct(abriu.length, viuPeca.length) + ' das que viram uma peça</small></div>' +
+          '<div class="metr-card"><span>Concluíram</span><b>' + pct(concluiu.length, abriu.length) + '</b><small>' + concluiu.length + ' sessões chegaram ao tamanho</small></div>' +
+          '<div class="metr-card"><span>Abandono</span><b>' + pct(abriu.length - concluiu.length, abriu.length) + '</b><small>' + total('provador_abandon') + ' fechamentos antes do resultado</small></div>' +
+          '<div class="metr-card destaque"><span>Conversão com provador</span><b>' + pct(compra(concluiu), concluiu.length) + '</b><small>sem provador: ' + pct(compra(semPv), semPv.length) + '</small></div>' +
+          '</div><p class="nota">Resultados: ' + (Object.keys(st).map(k => ({ ok: 'tamanho indicado', sem_dados: 'sem dados da peça', fora_da_tabela: 'fora da tabela', perfil_incompleto: 'perfil incompleto' })[k] + ' ' + st[k]).join(' · ') || 'nenhum ainda') + '. Os eventos não levam medidas pessoais, só categorias. Com poucas sessões, a comparação de conversão não tem valor estatístico.</p>';
+      })() +
       '<div class="acoes-linha"><button class="btn sec" type="button" id="limpar-eventos">Apagar os eventos deste navegador</button></div>';
     document.getElementById('limpar-eventos').addEventListener('click', () => { guarda('cl_eventos', []); desenha(); });
   }

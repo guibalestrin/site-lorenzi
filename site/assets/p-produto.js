@@ -15,16 +15,7 @@
   const chave = p.medidaChave;
   const idxPeca = p.medidas.colunas.indexOf(chave);
   const usaGuia = idxPeca > -1 && corpo[chave] && p.categoria !== 'acessorios';
-  const ESTADOS = [
-    { max: 4, nome: 'Ajustado', txt: 'marca a silhueta' },
-    { max: 10, nome: 'No corpo', txt: 'acompanha sem apertar' },
-    { max: 99, nome: 'Amplo', txt: 'cai solto' }
-  ];
-  const estadoDe = f => ESTADOS.find(e => f <= e.max);
-  const medidaPeca = t => p.medidas.valores[t] ? p.medidas.valores[t][idxPeca] : null;
-  const corpoDe = t => { const i = corpo.tamanhos.indexOf(t); return i > -1 && corpo[chave] ? corpo[chave][i] : null; };
-  const disponivel = t => p.estoque[p.tamanhos.indexOf(t)] > 0;
-  const chaveTxt = chave === 'Tórax' ? 'tórax' : chave.toLowerCase();
+  const fichaPv = window.CLProvadorMedidas.fichaDe(p);
   const modTxt = p.modelagem === 'No corpo' ? 'no corpo' : p.modelagem.toLowerCase().replace(/o$/, 'a');
   document.title = p.nome + ' · Casa Lorenzi';
   const av = A.de(p.id);
@@ -61,18 +52,15 @@
         precoHTML(p, true) +
         '<ul class="atributos"><li><span class="cor-ponto" style="background:' + p.cor.hex + '"></span>' + esc(p.cor.nome) + '</li><li>' + esc(p.tecido) + '</li><li>Modelagem ' + modTxt + '</li></ul>' +
         '<form id="form-compra" novalidate>' +
-          '<fieldset class="tamanhos"><div class="tam-topo"><legend class="rot">Tamanho</legend><span class="tam-links">' + (usaGuia ? '<button class="link-ajuda" type="button" id="qual-tam">Qual é o meu tamanho?</button>' : '') + '<button class="link-ajuda" type="button" id="abrir-guia">Guia de tamanhos</button></span></div>' +
+          '<fieldset class="tamanhos"><div class="tam-topo"><legend class="rot">Tamanho</legend><span class="tam-links">' + (fichaPv.aplicavel ? '<button class="link-ajuda" type="button" id="qual-tam">Qual é o meu tamanho?</button>' : '') + '<button class="link-ajuda" type="button" id="abrir-guia">Guia de tamanhos</button></span></div>' +
             '<div class="chips">' + p.tamanhos.map((t, i) => '<label class="chip"><input type="radio" name="tam" value="' + t + '"' + (p.estoque[i] ? '' : ' disabled') + '><span>' + t + '</span></label>').join('') + '</div>' +
             '<p class="disp" id="disp" aria-live="polite">' + (offTams.length ? 'Tamanhos riscados estão indisponíveis.' : 'Todos os tamanhos disponíveis.') + '</p>' +
             (offTams.length ? '<p class="avise">' + ICONE.sino + '<span>Seu tamanho acabou?</span> <button class="link-ajuda" type="button" id="avise">Avise-me quando voltar</button></p>' : '') +
             (p.categoria !== 'acessorios' ? '<p class="modelagem-info"><b>Modelagem ' + modTxt + ':</b> ' + ESTADO_TXT[p.modelagem] + '.' + (p.modelo ? ' ' + (p.genero === 'feminino' ? 'A modelo' : 'O modelo') + ' tem ' + p.modelo.altura + ' e veste ' + p.modelo.tamanho + '.' : '') + ' <a href="#avaliacoes" data-filtro-caimento="certo">' + pctCerto + '% ' + (p.genero === 'feminino' ? 'das clientes' : 'dos clientes') + ' dizem que veste como esperado</a>.</p>' : '') +
           '</fieldset>' +
-          (usaGuia ?
-          '<div class="caimento-box" id="caimento-box">' +
-            '<div class="cx-linha"><label for="medida">Qual é o meu tamanho? Sua medida de ' + chaveTxt + ' (cm)</label><div class="cx-in"><input id="medida" type="number" inputmode="numeric" min="50" max="160" placeholder="' + corpo[chave][Math.floor(corpo.tamanhos.length / 2)] + '"><button class="btn sec" type="button" id="calc-tam">Indicar tamanho</button></div></div>' +
-            '<p class="rec" id="rec" aria-live="polite">Esta peça tem modelagem <b>' + modTxt + '</b>. Informe a sua medida e o guia indica o tamanho e como ele vai cair.</p>' +
-            '<div class="fita-mini" id="fita-mini" hidden aria-hidden="true"><div class="trilho"><span>Ajustado</span><span>No corpo</span><span>Amplo</span></div><i class="marca" id="marca"></i></div>' +
-          '</div>' : '') +
+          (fichaPv.aplicavel
+            ? '<div class="provador-box" id="provador-box"><div><p class="rot">Descubra seu tamanho ideal</p><p>Altura, peso e como você gosta que a roupa caia. Cruzamos com as medidas desta peça, tamanho por tamanho.</p></div><button class="btn sec" type="button" id="abrir-provador">Descubra seu tamanho ideal</button><p class="pv-ja" id="pv-ja" aria-live="polite" hidden></p></div>'
+            : '<div class="provador-box sem-dados"><p class="rot">Provador</p><p>' + esc(fichaPv.motivo) + '</p></div>') +
           '<p class="msg erro" id="erro-tam" hidden>Escolha um tamanho para adicionar à sacola.</p>' +
           '<div class="add-linha"><button class="btn grande largo" type="submit" id="add">Adicionar à sacola</button>' +
             '<button class="btn sec grande fav-pdp" type="button" data-fav="' + p.id + '" aria-pressed="' + favoritos.tem(p.id) + '" aria-label="' + (favoritos.tem(p.id) ? 'Remover dos favoritos: ' : 'Salvar nos favoritos: ') + esc(p.nome) + '">' + ICONE.coracao + '</button></div>' +
@@ -128,14 +116,6 @@
   const form = document.getElementById('form-compra');
   const disp = document.getElementById('disp');
   const erroTam = document.getElementById('erro-tam');
-  const rec = document.getElementById('rec');
-  const fitaMini = document.getElementById('fita-mini');
-  const marca = document.getElementById('marca');
-  function mostraFita(folga) {
-    if (!fitaMini) return;
-    fitaMini.hidden = false;
-    marca.style.left = Math.max(2, Math.min(98, folga / 16 * 100)) + '%';
-  }
   function tamanhoEscolhido() { const r = form.querySelector('input[name=tam]:checked'); return r ? r.value : ''; }
   form.addEventListener('change', e => {
     if (e.target.name !== 'tam') return;
@@ -143,42 +123,43 @@
     const t = e.target.value;
     const q = p.estoque[p.tamanhos.indexOf(t)];
     disp.innerHTML = q <= 2 ? '<span class="pouco">Tamanho ' + t + ': ' + (q === 1 ? 'última unidade' : 'últimas ' + q + ' unidades') + ' no site.</span>' : 'Tamanho ' + t + ': disponível para entrega e retirada na loja.';
-    if (usaGuia) {
-      const pc = medidaPeca(t), cp = corpoDe(t);
-      if (pc && cp) {
-        const f = pc - cp, est = estadoDe(f);
-        if (!document.getElementById('medida').value) {
-          rec.innerHTML = 'No tamanho <b>' + t + '</b>, a peça tem ' + pc + ' cm de ' + chaveTxt + '. Em quem veste ' + t + ' (' + cp + ' cm), a folga é de ' + f + ' cm: <b>' + est.nome.toLowerCase() + '</b>, ' + est.txt + '.';
-          mostraFita(f);
-        } else indicar(false);
-      }
-    }
+    const ind = window.CLProvador.indicacao(p.id);
+    const linha = ind && ind.porTamanho && ind.porTamanho.find(x => x.tamanho === t);
+    if (linha && linha.pontos.length) disp.innerHTML += '<span class="pv-folga-sel"> Para você no ' + t + ': ' + linha.pontos.map(x => x.nome.toLowerCase() + ' ' + (x.folga > 0 ? '+' : '') + String(x.folga).replace('.', ',') + ' cm (' + ({ aperta: 'aperta', ajustado: 'ajustado', regular: 'regular', solto: 'solto', 'no lugar': 'no lugar', folgado: 'folgado' })[x.estado] + ')').join(', ') + '.</span>';
   });
 
-  function indicar(selecionar) {
-    const inp = document.getElementById('medida');
-    const m = Number(String(inp.value).replace(',', '.'));
-    if (!m || m < 50 || m > 160) { rec.textContent = 'Informe a sua medida de ' + chaveTxt + ' em centímetros, entre 50 e 160.'; inp.setAttribute('aria-invalid', 'true'); inp.focus(); return; }
-    inp.removeAttribute('aria-invalid');
-    const opcoes = p.tamanhos.map(t => ({ t, f: medidaPeca(t) - m, ok: disponivel(t) })).filter(o => o.f >= 0);
-    if (!opcoes.length) { rec.innerHTML = 'Com ' + m + ' cm de ' + chaveTxt + ', o maior tamanho desta peça pode ficar justo. Vale pedir ajuda: <button class="link-ajuda" type="button" data-ajuda="tamanho" data-produto="' + p.id + '">Dúvida sobre tamanho?</button>'; fitaMini && (fitaMini.hidden = true); return; }
-    const melhor = opcoes.slice().sort((a, b) => Math.abs(a.f - p.folgaAlvo) - Math.abs(b.f - p.folgaAlvo))[0];
-    const est = estadoDe(melhor.f);
-    let txt = 'Indicamos o <b>' + melhor.t + '</b>: folga de ' + melhor.f + ' cm no ' + chaveTxt + ', fica <b>' + est.nome.toLowerCase() + '</b> (' + est.txt + '), como esta modelagem foi pensada.';
-    const i = p.tamanhos.indexOf(melhor.t);
-    const menor = p.tamanhos[i - 1], maior = p.tamanhos[i + 1];
-    if (menor && medidaPeca(menor) - m >= 0) txt += ' Se preferir mais ajustado, o ' + menor + ' deixa ' + (medidaPeca(menor) - m) + ' cm.';
-    else if (maior) txt += ' Se preferir mais solto, o ' + maior + ' deixa ' + (medidaPeca(maior) - m) + ' cm.';
-    if (!melhor.ok) txt += ' <b>O ' + melhor.t + ' está indisponível agora.</b>';
-    rec.innerHTML = txt;
-    mostraFita(melhor.f);
-    if (selecionar && melhor.ok) { const r = form.querySelector('input[name=tam][value="' + melhor.t + '"]'); r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
-    track('size_guide_used', { item_id: p.id, medida: m, indicado: melhor.t });
+  /* ---------- provador virtual ---------- */
+  const NOME_GRAU = { boa: 'boa correspondência', moderada: 'correspondência moderada', limitada: 'correspondência limitada' };
+  function marcaIndicado(r) {
+    form.querySelectorAll('.tag-ind').forEach(x => x.remove());
+    if (!r || r.status !== 'ok') return;
+    const inp = form.querySelector('input[name=tam][value="' + r.tamanho + '"]');
+    if (inp) inp.closest('.chip').insertAdjacentHTML('beforeend', '<span class="tag-ind" aria-hidden="true">Para você</span>');
   }
-  if (usaGuia) {
-    document.getElementById('calc-tam').addEventListener('click', () => indicar(true));
-    document.getElementById('medida').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); indicar(true); } });
+  function atualizaIndicacao(r) {
+    const ja = document.getElementById('pv-ja');
+    if (!ja) return;
+    r = r || window.CLProvador.indicacao(p.id);
+    marcaIndicado(r);
+    if (!r) { ja.hidden = true; document.getElementById('abrir-provador').textContent = 'Descubra seu tamanho ideal'; return; }
+    ja.hidden = false;
+    ja.innerHTML = r.status === 'ok'
+      ? 'Pelo seu perfil, indicamos o <b>' + r.tamanho + '</b> nesta peça, com ' + NOME_GRAU[r.grau] + '.' + (r.disponivel ? '' : ' Está esgotado; ' + (r.alternativa ? 'o ' + r.alternativa + ' é a opção disponível mais próxima.' : 'avise-me quando voltar.'))
+      : r.status === 'fora_da_tabela' ? 'Pelo seu perfil, nenhum tamanho desta peça tem folga suficiente. Veja os detalhes.' : esc(r.mensagem || '');
+    document.getElementById('abrir-provador').textContent = 'Ver detalhes e comparar';
   }
+  if (fichaPv.aplicavel) {
+    document.getElementById('abrir-provador').addEventListener('click', () => window.CLProvador.abrir(p.id, 'produto'));
+    atualizaIndicacao();
+  }
+  document.addEventListener('cl:provador-resultado', e => { if (e.detail.produtoId === p.id) atualizaIndicacao(e.detail.resultado); });
+  document.addEventListener('cl:provador-perfil', () => atualizaIndicacao());
+  document.addEventListener('cl:provador-tamanho', e => {
+    if (e.detail.produtoId !== p.id) return;
+    const r = form.querySelector('input[name=tam][value="' + e.detail.tamanho + '"]');
+    if (r && !r.disabled) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
+    form.querySelector('.tamanhos').scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  });
 
   /* ---------- guia de tamanhos (gaveta) ---------- */
   const guiaCorpo = document.createElement('div');
@@ -189,10 +170,12 @@
     corpo.tamanhos.map((t, i) => '<tr><th scope="row">' + t + '</th>' + corpoCols.map(c => '<td>' + corpo[c][i] + '</td>').join('') + '</tr>').join('') + '</tbody></table>' +
     '<h3 class="rot" style="margin-top:22px">Medidas desta peça (cm)</h3>' + tabela +
     '<h3 class="rot" style="margin-top:22px">Como medir</h3><ul class="como"><li><b>Busto ou tórax:</b> fita na parte mais larga do peito, sem apertar.</li><li><b>Cintura:</b> na parte mais fina do tronco.</li><li><b>Quadril:</b> na parte mais larga, com os pés juntos.</li></ul>' +
-    '<h3 class="rot" style="margin-top:22px">Como ler a folga</h3><p>Folga é a diferença entre a medida da peça e a do corpo. Até 4 cm fica <b>ajustado</b>; de 5 a 10 cm fica <b>no corpo</b>; acima disso fica <b>amplo</b>.</p>' +
+    '<h3 class="rot" style="margin-top:22px">Como ler a folga</h3><p>Folga é a diferença entre a medida da peça e a do corpo. Esta peça foi desenhada para cerca de ' + p.folgaAlvo + ' cm de folga em ' + chave.toLowerCase() + ' (modelagem ' + modTxt + '). Para indicar o seu tamanho a partir das suas medidas, use o provador.</p>' + (fichaPv.aplicavel ? '<button class="btn sec" type="button" id="guia-provador">Descubra seu tamanho ideal</button>' : '') +
     '<p class="nota">Tabelas de exemplo desta demonstração.</p>';
   const guia = lateral('Guia de tamanhos', guiaCorpo, '<button class="link-ajuda" type="button" data-ajuda="tamanho" data-produto="' + p.id + '" data-tamanho-de="input[name=tam]">Ainda em dúvida? Fale com uma consultora</button>');
   document.getElementById('abrir-guia').addEventListener('click', () => { guia.abrir(); track('size_chart_open', { item_id: p.id }); });
+  const guiaPv = guia.el.querySelector('#guia-provador');
+  if (guiaPv) guiaPv.addEventListener('click', () => { guia.fechar(); window.CLProvador.abrir(p.id, 'guia'); });
   guia.el.addEventListener('click', e => { if (e.target.closest('[data-ajuda]')) guia.fechar(); });
 
   /* ---------- frete por CEP ---------- */
@@ -223,7 +206,8 @@
       primeiro && primeiro.focus({ preventScroll: true });
       return;
     }
-    sacola.adicionar(p.id, t, 1);
+    const ind = window.CLProvador.indicacao(p.id);
+    sacola.adicionar(p.id, t, 1, ind && ind.status === 'ok' ? { rec: ind.tamanho } : undefined);
     avisoAdd.hidden = false;
     avisoAdd.innerHTML = '<div class="adicionado-in"><img src="' + C.foto(p.fotos[0]) + '" alt=""><div><strong>Adicionado à sacola</strong><span>' + esc(p.nome) + ' · tamanho ' + t + '</span></div><div class="adicionado-acoes"><a class="btn" href="sacola.html">Ver sacola e finalizar</a><button class="btn sec" type="button" id="seguir">Continuar comprando</button></div></div>';
     document.getElementById('seguir').addEventListener('click', () => { avisoAdd.hidden = true; add.focus(); });
@@ -249,12 +233,7 @@
 
   /* ---------- "Qual é o meu tamanho?": leva ao guia de caimento, sem sair da compra ---------- */
   const qualTam = document.getElementById('qual-tam');
-  if (qualTam) qualTam.addEventListener('click', () => {
-    const box = document.getElementById('caimento-box');
-    box.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-    document.getElementById('medida').focus({ preventScroll: true });
-    box.classList.remove('realce'); void box.offsetWidth; box.classList.add('realce');
-  });
+  if (qualTam) qualTam.addEventListener('click', () => window.CLProvador.abrir(p.id, 'qual-tamanho'));
 
   /* ---------- avise-me quando voltar ---------- */
   const avise = document.getElementById('avise');

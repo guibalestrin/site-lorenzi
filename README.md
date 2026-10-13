@@ -14,7 +14,8 @@ Site conceitual da Casa Lorenzi (case de estudo). A entrada é um filme de 16 se
   - `assets/catalogo.js`: o catálogo de demonstração (preços, estoque e composição são exemplos).
   - `assets/loja.js`: o cabeçalho, a busca, a sacola, o frete simulado, a gaveta da consultora e a medição.
   - `assets/pagamento.js`: o adaptador de pagamento, incluindo o tratamento da falha do Cartão Casa Lorenzi.
-- `tests/pagamento.test.js`: os testes do adaptador. Rode `npm test`.
+- `site/assets/provador/`: o provador virtual (motor de regras, medidas por SKU, perfil com consentimento, serviço e interface). Veja `docs/provador.md`.
+- `tests/`: os testes do adaptador de pagamento e do motor do provador. Rode `npm test`.
 - `docs/jornada-de-compra.md`: o diagnóstico, o mapa da jornada, os eventos medidos e o que falta para produção.
 - `assets-cdn.json`: os endereços do vídeo e das fotos, hospedados no armazenamento do Higgsfield.
 - `pacote-de-design.md`: o roteiro, os textos, a paleta e as decisões de design.
